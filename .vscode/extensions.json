@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "vue.volar",
+    "vue.vscode-typescript-vue-plugin",
+    "wejectchan.vue3-snippets-for-vscode",
+    "febean.vue-format",
+    "octref.vetur",
+    "nicholashsiang.vscode-pinia-snippets",
+    "mariorodeghiero.vue-theme",
+    "simonsiefke.svg-preview",
+    "rangav.vscode-thunder-client",
+    "wayou.vscode-todo-highlight",
+    "syler.sass-indented"
+  ]
+}
