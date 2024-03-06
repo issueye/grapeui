@@ -9,7 +9,25 @@ body,
 }
 
 .el-header {
-  background: repeating-linear-gradient(to right, #ff4b1f, #0082c8, #0082c8, #1CB5E0);
+  background: linear-gradient(194deg, rgb(61, 127, 252) 0%, rgb(4, 80, 255) 100%);
+  --el-header-height: 40px;
+  --el-header-padding: 0 5px 0 10px;
+}
 
-  --el-header-height: 48px;
+.el-menu{
+  border-right: none;
+  border-bottom: 1px solid #D9D9D9;
+}
+
+.el-menu-item.is-active{
+  height: 40px;
+  background-color: #E0EFFF;
+}
+
+.el-menu-item{
+  height: 40px;
+}
+
+.el-sub-menu__title{
+  height: 40px;
 }

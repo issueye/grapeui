@@ -3,19 +3,39 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/views/login.vue';
 import Home from '@/views/home/index.vue';
 import UserManagement from '@/views/system/user_management/index.vue';
+import Dashboard from '@/views/dashboard/index.vue';
 
 const routes = [
     {
         path: '/',
         name: 'Home',
         component: Home,
+        redirect: '/dashboard',
         children: [
             {
                 path: 'dashboard',
                 name: 'Dashboard',
+                component: Dashboard,
                 meta: {
                     title: '首页',
                 }
+            },
+            {
+                path: 'page',
+                name: 'Page',
+                redirect: '/page/page_management',
+                children: [
+                    {
+                        path: 'page_management',
+                        name: 'PageManagement',
+                        component: UserManagement,
+                    },
+                    {
+                        path: 'target_management',
+                        name: 'TargetManagement',
+                        component: UserManagement,
+                    }
+                ],
             },
             {
                 path: 'system',
@@ -25,6 +45,16 @@ const routes = [
                     {
                         path: 'user_management',
                         name: 'UserManagement',
+                        component: UserManagement,
+                    },
+                    {
+                        path: 'user_group_management',
+                        name: 'UserGroupManagement',
+                        component: UserManagement,
+                    },
+                    {
+                        path: 'menu_management',
+                        name: 'MenuManagement',
                         component: UserManagement,
                     }
                 ]
