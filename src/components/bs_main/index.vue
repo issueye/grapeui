@@ -10,7 +10,8 @@
 
 <style lang="scss" scoped>
 .bs-main-body{
-    height: calc(100% - 57px);
+    height: calc(100% - 46px);
     background-color: #fff;
+    border-radius: 0 0 2px 2px;
 }
 </style>

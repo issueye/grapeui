@@ -5,16 +5,18 @@
     </div>
     <div class="header-actions">
         <el-avatar :size="25">A</el-avatar>
-        <el-dropdown class="user-name">
+        <el-dropdown class="user-name" @command="dropdownClick">
             <span class="el-dropdown-link" style="margin-left: 10px;">
-                管理员 <el-icon><ArrowDown /></el-icon>
+                管理员 <el-icon>
+                    <ArrowDown />
+                </el-icon>
             </span>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item>
-                        <svg-icon iconName="changepwd" color="#D9D9D9" :size="15" style="margin-right: 10px;" /> 修改密码</el-dropdown-item>
-                    <el-dropdown-item>
-                        <svg-icon iconName="logout" color="#D9D9D9" :size="15" style="margin-right: 10px;" /> 退出登录</el-dropdown-item>
+                    <el-dropdown-item command="修改密码">
+                        <svg-icon iconName="changepwd" color="#D9D9D9" :size="15" style="margin-right: 10px;" /> 修改密码 </el-dropdown-item>
+                    <el-dropdown-item command="退出登录">
+                        <svg-icon iconName="logout" color="#D9D9D9" :size="15" style="margin-right: 10px;" /> 退出登录 </el-dropdown-item>
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
@@ -28,6 +30,23 @@ import {
     Switch,
     BottomRight
 } from '@element-plus/icons-vue';
+import {
+    useRouter
+} from 'vue-router';
+
+const route = useRouter()
+
+const dropdownClick = (value) => { 
+    switch (value) {
+        case "修改密码": {
+            break;
+        }
+        case "退出登录": {
+            route.push('/login');
+            break;
+        }
+    }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -52,7 +71,7 @@ import {
     }
 
     .el-dropdown-link:focus {
-      outline: none;
+        outline: none;
     }
 
     .user-name {

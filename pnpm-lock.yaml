@@ -20,6 +20,9 @@ dependencies:
   vue-router:
     specifier: ^4.3.0
     version: registry.npmmirror.com/vue-router@4.3.0(vue@3.4.19)
+  vxe-table:
+    specifier: ^4.5.20
+    version: registry.npmmirror.com/vxe-table@4.5.20(vue@3.4.19)(xe-utils@3.5.22)
 
 devDependencies:
   '@element-plus/icons-vue':
@@ -1139,6 +1142,12 @@ packages:
       domhandler: registry.npmmirror.com/domhandler@4.3.1
       entities: registry.npmmirror.com/entities@2.2.0
     dev: true
+
+  registry.npmmirror.com/dom-zindex@1.0.1:
+    resolution: {integrity: sha512-M/MERVDZ8hguvjl6MAlLWSLYLS7PzEyXaTb5gEeJ+SF+e9iUC0sdvlzqe91MMDHBoy+nqw7wKcUOrDSyvMCrRg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dom-zindex/-/dom-zindex-1.0.1.tgz}
+    name: dom-zindex
+    version: 1.0.1
+    dev: false
 
   registry.npmmirror.com/domelementtype@1.3.1:
     resolution: {integrity: sha512-BSKB+TSpMpFI/HOxCNr1O8aMOTZ8hT3pM3GQ0w/mWRmkhEDSFJkkyzz4XQsBV44BChwGkrDfMyjVD0eA2aFV3w==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/domelementtype/-/domelementtype-1.3.1.tgz}
@@ -2738,3 +2747,23 @@ packages:
       '@vue/runtime-dom': registry.npmmirror.com/@vue/runtime-dom@3.4.19
       '@vue/server-renderer': registry.npmmirror.com/@vue/server-renderer@3.4.19(vue@3.4.19)
       '@vue/shared': registry.npmmirror.com/@vue/shared@3.4.19
+
+  registry.npmmirror.com/vxe-table@4.5.20(vue@3.4.19)(xe-utils@3.5.22):
+    resolution: {integrity: sha512-UC+z1ED3QE6Be/UN0390hSXMAseXg+com3fkX9q3tjfsCGFx7CjN9tLstuNtecn+ElkPGHqzRGtA3N5FTSv5Vw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vxe-table/-/vxe-table-4.5.20.tgz}
+    id: registry.npmmirror.com/vxe-table/4.5.20
+    name: vxe-table
+    version: 4.5.20
+    peerDependencies:
+      vue: ^3.2.28
+      xe-utils: ^3.5.0
+    dependencies:
+      dom-zindex: registry.npmmirror.com/dom-zindex@1.0.1
+      vue: registry.npmmirror.com/vue@3.4.19
+      xe-utils: registry.npmmirror.com/xe-utils@3.5.22
+    dev: false
+
+  registry.npmmirror.com/xe-utils@3.5.22:
+    resolution: {integrity: sha512-rhWuM2fVXsdrqUtyjRAsYTDLvVzYSSZqg/uCRyDqcw96AweB1AWsnTJZyl9g68ejnP0xhxfSoNBSrIcOeX1yxA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/xe-utils/-/xe-utils-3.5.22.tgz}
+    name: xe-utils
+    version: 3.5.22
+    dev: false

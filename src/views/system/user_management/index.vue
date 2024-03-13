@@ -5,13 +5,16 @@
         </template>
     </BsHeader>
     <BsMain>
+        <el-form>
+            <el-form-item label="账户" prop="">
 
+            </el-form-item>
+        </el-form>
     </BsMain>
 </template>
 
 <script setup>
-    import BsHeader from '@/components/bs_header/index.vue';
-    import BsMain from '@/components/bs_main/index.vue';
+
 </script>
 
 <style lang="scss">

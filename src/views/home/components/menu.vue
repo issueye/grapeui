@@ -24,7 +24,7 @@
         </template>
 
         <el-menu-item index="/system/user_management">用户管理</el-menu-item>
-        <el-menu-item index="/system/user_group_management">用户组管理</el-menu-item>
+        <el-menu-item index="/system/auth_group_management">用户组管理</el-menu-item>
         <el-menu-item index="/system/menu_management">菜单管理</el-menu-item>
     </el-sub-menu>
 </el-menu>

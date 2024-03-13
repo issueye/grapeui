@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/views/login.vue';
 import Home from '@/views/home/index.vue';
 import UserManagement from '@/views/system/user_management/index.vue';
+import AuthGroupManagement from '@/views/system/auth_group_management/index.vue';
 import Dashboard from '@/views/dashboard/index.vue';
 
 const routes = [
@@ -48,9 +49,12 @@ const routes = [
                         component: UserManagement,
                     },
                     {
-                        path: 'user_group_management',
-                        name: 'UserGroupManagement',
-                        component: UserManagement,
+                        path: 'auth_group_management',
+                        name: 'AuthGroupManagement',
+                        component: AuthGroupManagement,
+                        meta: {
+                            title: '用户组管理',
+                        },
                     },
                     {
                         path: 'menu_management',

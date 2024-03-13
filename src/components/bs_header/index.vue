@@ -29,6 +29,7 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .bs-header-box {
+    border-radius: 2px 2px 0 0;
     width: 100%;
     height: 45px;
     display: inline-flex;
@@ -38,7 +39,7 @@ const props = defineProps({
     border-bottom: 1px solid #D9D9D9;
 
     .bs-header-actions{
-        margin-right: 14px;
+        margin-right: 10px;
     }
 
     .bs-header-title {
