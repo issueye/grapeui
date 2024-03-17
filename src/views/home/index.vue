@@ -5,7 +5,7 @@
         <Header />
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside :width="menuWidth">
             <Menu />
         </el-aside>
         <el-main>
@@ -17,8 +17,16 @@
 </template>
 
 <script setup>
+import { storeToRefs } from 'pinia';
 import Header from './components/header.vue';
 import Menu from './components/menu.vue';
+
+import { useMenuStore } from '@/store/menu'
+
+const menuStore = useMenuStore()
+
+const { menuWidth } = storeToRefs(menuStore)
+console.log('menuWidth', menuWidth);
 
 </script>
 
