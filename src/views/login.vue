@@ -9,13 +9,13 @@
                 <div class="login-form-box">
                     <el-form>
                         <el-form-item label="用户">
-                            <el-input v-model="form.user" />
+                            <el-input placeholder="请输入账户" v-model="form.user" />
                         </el-form-item>
                         <el-form-item label="密码">
-                            <el-input v-model="form.password" />
+                            <el-input placeholder="请输入密码" type="password" v-model="form.password" />
                         </el-form-item>
 
-                        <el-button type="primary" class="login-btn">登录</el-button>
+                        <el-button type="primary" class="login-btn" @click="loginClick">登录</el-button>
                     </el-form>
                 </div>
             </div>
@@ -25,12 +25,18 @@
 
 <script setup>
 import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
 
+const route = useRouter()
 
 const form = reactive({
     user: '',
     password: '',
 })
+
+const loginClick = () => {
+    route.push('/');
+}
 
 </script>
 
@@ -56,7 +62,7 @@ const form = reactive({
 
         .login-sys-title {
             position: relative;
-            top: 40px;
+            top: 60px;
             left: 60px;
             font-size: 24px;
             font-weight: 600;
@@ -67,12 +73,13 @@ const form = reactive({
             position: relative;
             left: 30px;
             top: 100px;
+            width: 240px;
 
             .login-btn {
                 position: relative;
                 top: 20px;
                 left: 40px;
-                width: 177px;
+                width: 199px;
             }
         }
     }
