@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-const collapse = '184px'
+const collapse = '184.5px'
 const expand = '60px'
 
 
