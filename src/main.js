@@ -18,6 +18,7 @@ import 'virtual:svg-icons-register';
 
 import BsHeader from '@/components/bs_header/index.vue';
 import BsMain from '@/components/bs_main/index.vue';
+import BsDialog from '@/components/bs_dialog/index.vue';
 
 import router from './router/index';
 
@@ -33,6 +34,7 @@ app.use(VXETable)
 app.component('svg-icon', svgIcon)
 app.component('BsHeader', BsHeader)
 app.component('BsMain', BsMain)
+app.component('BsDialog', BsDialog)
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)

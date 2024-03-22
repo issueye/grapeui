@@ -1,7 +1,7 @@
 <template>
   <BsHeader title="用户管理" description="用户管理">
     <template #actions>
-      <el-button type="primary">添加</el-button>
+      <el-button type="primary" @click="onAddClick">添加</el-button>
     </template>
   </BsHeader>
   <BsMain>
@@ -58,45 +58,50 @@
     </template>
   </BsMain>
 
-  <vxe-modal v-model="visible" size="small" show-footer>
-    <template #title>
-      <span>{{ title }}</span>
-    </template>
-    <template #default>
-      <el-form
-        ref="ruleFormRef"
-        style="max-width: 600px"
-        :model="ruleForm"
-        status-icon
-        :rules="rules"
-        label-width="auto"
-      >
-        <el-form-item label="Password" prop="pass">
+  <BsDialog
+    :title="title"
+    :width="500"
+    :visible="visible"
+    @close="onDialogClose"
+  >
+    <template #body>
+      <el-form label-width="70px">
+        <el-form-item label="账户">
           <el-input
-            v-model="ruleForm.pass"
-            type="password"
-            autocomplete="off"
+            v-model="dataForm.account"
+            placeholder="请输入账户"
+            size="normal"
+            clearable
           />
         </el-form-item>
-        <el-form-item label="Confirm" prop="checkPass">
+        <el-form-item label="姓名">
           <el-input
-            v-model="ruleForm.checkPass"
-            type="password"
-            autocomplete="off"
+            v-model="dataForm.name"
+            placeholder="请输入账户"
+            size="normal"
+            clearable
           />
         </el-form-item>
-        <el-form-item label="Age" prop="age">
-          <el-input v-model.number="ruleForm.age" />
+        <el-form-item label="用户组">
+          <el-select
+            v-model="dataForm.groupId"
+            value-key=""
+            placeholder=""
+            clearable
+            filterable
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
     </template>
-    <template #footer>
-      <el-button type="primary" @click="submitForm(ruleFormRef)"
-        >Submit</el-button
-      >
-      <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
-    </template>
-  </vxe-modal>
+  </BsDialog>
 </template>
 
 <script setup>
@@ -106,11 +111,18 @@ const form = reactive({
   condition: "",
 });
 
-const dataFrom = reactive({
+const dataForm = reactive({
   account: "",
+  name: "",
+  groupId: "",
 });
 
-const title = ref('用户信息')
+const title = ref("用户信息");
+
+const options = ref([
+  { value: "10001", label: "管理员" },
+  { value: "10000", label: "测试" },
+]);
 
 const ruleForm = reactive({
   pass: "",
@@ -140,6 +152,10 @@ const tableData = ref([
   },
 ]);
 
+const onAddClick = () => {
+  visible.value = true;
+};
+
 const onChange = () => {};
 
 const onQryClick = () => {};
@@ -147,6 +163,15 @@ const onQryClick = () => {};
 const onEditClick = () => {
   visible.value = true;
 };
+
+const onDialogClose = () => {
+  visible.value = false;
+};
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.dialog-footer-box {
+  display: flex;
+  justify-content: flex-end;
+}
+</style>

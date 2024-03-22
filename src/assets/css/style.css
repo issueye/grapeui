@@ -14,24 +14,33 @@ body,
   --el-header-padding: 0 5px 0 10px;
 }
 
-.el-menu{
+.el-menu {
   border-right: none;
   border-bottom: 1px solid #D9D9D9;
 }
 
-.el-menu-item.is-active{
+.el-menu-item.is-active {
   height: 40px;
   background-color: #E0EFFF;
 }
 
-.el-menu-item{
+.el-menu-item {
   height: 40px;
 }
 
-.el-sub-menu__title{
+.el-sub-menu__title {
   height: 40px;
 }
 
-.vxe-modal--box{
+.vxe-modal--box {
   --vxe-border-radius: 2px;
+}
+
+.el-dialog__header {
+  border-bottom: 1px solid #d9d9d9;
+  padding: 10px;
+}
+
+.el-dialog {
+  --el-dialog-padding-primary: 0px;
 }
