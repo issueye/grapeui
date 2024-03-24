@@ -11,7 +11,6 @@
           <el-input
             v-model="form.condition"
             placeholder="请输入检索内容"
-            size="normal"
             clearable
             @change="onChange"
           />
@@ -21,39 +20,76 @@
         </el-form-item>
       </el-form>
 
-      <div>
+      <div class="table-box">
         <vxe-table
           round
           border
           :data="tableData"
           size="small"
-          :height="tableHeight"
+          height="100%"
           stripe
           auto-resize
         >
-          <vxe-column field="id" title="编码" />
-          <vxe-column field="account" title="账户" />
-          <vxe-column field="name" title="姓名" />
-          <vxe-column field="groupName" title="用户组" />
-          <vxe-column title="操作" width="130" align="center">
-            <el-button type="primary" text size="small" @click="onEditClick"
-              >编辑</el-button
-            >
-            <el-button type="danger" text size="small" @click="onEditClick"
-              >删除</el-button
-            >
+          <vxe-column field="id" title="编码" width="150" show-overflow />
+          <vxe-column field="account" title="账户" width="130" />
+          <vxe-column field="name" title="姓名" width="150" />
+          <vxe-column field="groupName" title="用户组" width="150" />
+          <vxe-column field="mark" title="备注" />
+          <vxe-column
+            field="state"
+            title="状态"
+            width="70"
+            align="center"
+            fixed="right"
+          >
+            <template v-slot="{ row }">
+              <el-tag
+                effect="plain"
+                :type="row.state === 1 ? 'success' : 'danger'"
+              >
+                {{ row.state === 1 ? "启用" : "停用" }}
+              </el-tag>
+            </template>
+          </vxe-column>
+          <vxe-column title="操作" width="190" align="center" fixed="right">
+            <template v-slot="{ row }">
+              <el-button
+                type="primary"
+                text
+                size="small"
+                @click="onEditStateClick(row)"
+                >{{ row.state === 1 ? "停用" : "启用" }}</el-button
+              >
+              <el-button
+                type="primary"
+                text
+                size="small"
+                @click="onEditClick(row)"
+                >编辑</el-button
+              >
+              <el-button
+                type="danger"
+                text
+                size="small"
+                @click="onDeleteClick(row)"
+                >删除</el-button
+              >
+            </template>
           </vxe-column>
         </vxe-table>
-
-        <div style="margin-top: 10px">
-          <el-pagination
-            small
-            background
-            layout="prev, pager, next"
-            :total="50"
-            class="mt-4"
-          />
-        </div>
+      </div>
+      <div style="margin-top: 10px">
+        <el-pagination
+          small
+          background
+          :current-page="pageNum"
+          :page-size="pageSize"
+          :page-sizes="[5, 10, 20]"
+          :total="total"
+          layout="total, sizes, prev, pager, next"
+          @size-change="onSizeChange"
+          @current-change="onCurrentChange"
+        />
       </div>
     </template>
   </BsMain>
@@ -62,27 +98,32 @@
     :title="title"
     :width="500"
     :visible="visible"
-    @close="onDialogClose"
+    @close="onClose"
+    @save="onSave"
+    @open="onOpen"
   >
     <template #body>
-      <el-form label-width="70px">
-        <el-form-item label="账户">
+      <el-form
+        label-width="auto"
+        :model="dataForm"
+        :rules="rules"
+        ref="dataFormRef"
+      >
+        <el-form-item label="账户" prop="account">
           <el-input
             v-model="dataForm.account"
             placeholder="请输入账户"
-            size="normal"
             clearable
           />
         </el-form-item>
-        <el-form-item label="姓名">
+        <el-form-item label="姓名" prop="name">
           <el-input
             v-model="dataForm.name"
             placeholder="请输入账户"
-            size="normal"
             clearable
           />
         </el-form-item>
-        <el-form-item label="用户组">
+        <el-form-item label="用户组" prop="groupId">
           <el-select
             v-model="dataForm.groupId"
             value-key=""
@@ -91,13 +132,23 @@
             filterable
           >
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in groupTableData"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
             >
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input
+            v-model="dataForm.mark"
+            placeholder="请输入备注"
+            :disabled="dataForm.sys === 1 && operationType === 1"
+            type="textarea"
+            :row="2"
+            clearable
+          />
         </el-form-item>
       </el-form>
     </template>
@@ -106,72 +157,217 @@
 
 <script setup>
 import { onMounted, reactive, ref } from "vue";
+import {
+  apiUserList,
+  apiUserCreate,
+  apiUserModify,
+  apiUserDelete,
+  apiUserModifyState,
+  apiUserGroupList,
+} from "@/apis/sys/user";
+import { ElMessage, ElMessageBox } from "element-plus";
 
+const nameTitle = "用户信息";
+// 标题
+const title = ref("用户信息");
+// 显示弹窗
+const visible = ref(false);
+// 操作类型
+const operationType = ref(0);
+// 数据
+const dataFormRef = ref();
+
+const rules = reactive({
+  name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+  account: [{ required: true, message: "请输入账户", trigger: "blur" }],
+  groupId: [{ required: true, message: "请选择用户组", trigger: "blur" }],
+});
+
+// 分页
+const pageNum = ref(1);
+const pageSize = ref(10);
+const total = ref(0);
+
+// 查询表单
 const form = reactive({
   condition: "",
 });
 
+// 弹窗表单
 const dataForm = reactive({
+  id: "",
   account: "",
   name: "",
   groupId: "",
+  sys: 0,
+  mark: "",
 });
 
-const title = ref("用户信息");
+onMounted(() => {});
 
-const options = ref([
-  { value: "10001", label: "管理员" },
-  { value: "10000", label: "测试" },
-]);
+const tableData = ref([]);
+const groupTableData = ref([]);
 
-const ruleForm = reactive({
-  pass: "",
-  checkPass: "",
-  age: "",
-});
+const getData = async () => {
+  let sendData = {
+    pageSize: pageSize.value,
+    pageNum: pageNum.value,
+    condition: form.condition,
+  };
+  let res = await apiUserList(sendData);
+  if (res.code === 200) {
+    tableData.value = res.data;
+    total.value = res.pageInfo.total;
+  }
+};
+
+// 重置表单数据
+const resetForm = () => {
+  dataForm.id = "";
+  dataForm.account = "";
+  dataForm.name = "";
+  dataForm.groupId = "";
+  dataForm.sys = 0;
+  dataForm.mark = "";
+};
+
+// 赋值表单数据
+const setForm = (value) => {
+  dataForm.id = value.id;
+  dataForm.account = value.account;
+  dataForm.name = value.name;
+  dataForm.groupId = value.groupId;
+  dataForm.sys = value.sys;
+  dataForm.mark = value.mark;
+};
 
 onMounted(() => {
-  tableHeight.value = document.documentElement.clientHeight - 286;
+  getData();
 });
 
-const tableHeight = ref();
-const visible = ref(false);
+// 事件
 
-const tableData = ref([
-  {
-    id: "1000",
-    name: "管理员",
-    account: "admin",
-    groupName: "管理员",
-  },
-  {
-    id: "1001",
-    name: "测试",
-    account: "test",
-    groupName: "测试组",
-  },
-]);
-
+/**
+ * 添加事件
+ */
 const onAddClick = () => {
+  operationType.value = 0;
+  title.value = `[添加]${nameTitle}`;
+  resetForm();
   visible.value = true;
 };
 
-const onChange = () => {};
+const onChange = () => {
+  getData();
+};
 
-const onQryClick = () => {};
+const onQryClick = () => {
+  getData();
+};
 
-const onEditClick = () => {
+const onEditClick = (value) => {
+  operationType.value = 1;
+  title.value = `[编辑]${nameTitle}`;
+  setForm(value);
   visible.value = true;
 };
 
-const onDialogClose = () => {
+const onEditStateClick = async (value) => {
+  const res = await apiUserModifyState(value.id);
+  if (res.code !== 200) {
+    ElMessage.error(res.message);
+    return;
+  }
+
+  ElMessage.success(res.message);
+  getData();
+};
+
+const onDeleteClick = (value) => {
+  ElMessageBox.confirm("请确认是否要删除数据？", "警告", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(async () => {
+      let res = await apiUserDelete(value.id);
+      if (res.code !== 200) {
+        ElMessage.error(res.message);
+        return;
+      }
+
+      ElMessage.success("删除成功");
+      getData();
+    })
+    .catch(() => {
+      ElMessage.info("取消删除");
+    });
+};
+
+const onSave = () => {
+  if (!dataFormRef.value) return;
+  dataFormRef.value.validate(async (valid) => {
+    if (valid) {
+      switch (operationType.value) {
+        case 0: {
+          const res = await apiUserCreate(dataForm);
+          if (res.code !== 200) {
+            ElMessage.error(res.message);
+            return;
+          }
+
+          ElMessage.success(res.message);
+          visible.value = false;
+          getData();
+          break;
+        }
+
+        case 1: {
+          const res = await apiUserModify(dataForm);
+          if (res.code !== 200) {
+            ElMessage.error(res.message);
+            return;
+          }
+
+          ElMessage.success(res.message);
+          visible.value = false;
+          getData();
+          break;
+        }
+      }
+    } else {
+      console.log("表单验证失败");
+    }
+  });
+};
+
+// 弹窗打开时
+const onOpen = async () => {
+  const res = await apiUserGroupList();
+  if (res.code === 200) {
+    groupTableData.value = res.data;
+  }
+};
+
+const onSizeChange = (value) => {
+  pageSize.value = value;
+  getData();
+};
+
+const onCurrentChange = () => {
+  getData();
+};
+
+const onClose = () => {
   visible.value = false;
+
+  if (!dataFormRef.value) return;
+  dataFormRef.value.resetFields();
 };
 </script>
 
 <style lang="scss">
-.dialog-footer-box {
-  display: flex;
-  justify-content: flex-end;
+.table-box {
+  height: calc(100% - 45px);
 }
 </style>

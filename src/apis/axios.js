@@ -1,12 +1,18 @@
 import axios from 'axios';
 
 const http = axios.create({
-  baseURL: '',
+  baseURL: 'http://127.0.0.1:10065',
   timeout: 5000,
 });
 
 // 请求拦截器
 http.interceptors.request.use(config => {
+
+  let token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = token
+  }
+
   // 在请求发送之前做一些处理
   return config;
 }, error => {

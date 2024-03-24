@@ -3,16 +3,17 @@
     v-model="props.visible"
     :title="props.title"
     :width="props.width"
-    :before-close="handleClose"
+    :before-close="onClose"
     :close-on-click-modal="false"
+    @open="onOpen"
   >
-    <dir class="dialog-body-box">
+    <div class="dialog-body-box">
       <slot name="body"> </slot>
-    </dir>
+    </div>
     <div class="dialog-footer-box">
       <slot name="footer">
         <el-button type="primary" @click="submitForm">确定</el-button>
-        <el-button @click="handleClose">关闭</el-button>
+        <el-button @click="onClose">关闭</el-button>
       </slot>
     </div>
   </el-dialog>
@@ -31,13 +32,19 @@ const props = defineProps({
   width: 500,
 });
 
-const emits = defineEmits(["close"]);
+const emits = defineEmits(["close", "open", "save"]);
 
-const handleClose = () => {
+const onClose = () => {
   emits("close");
 };
 
-const submitForm = () => {};
+const onOpen = () => {
+  emits("open");
+};
+
+const submitForm = () => {
+  emits("save");
+};
 </script>
 
 <style lang="scss" scoped>

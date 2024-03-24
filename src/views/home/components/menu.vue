@@ -1,7 +1,13 @@
 <template>
   <div class="menu-box">
-    <el-menu router :collapse-transition="false" :unique-opened="true" :collapse="isCollapse"
-      :default-active="defaultActive" :default-openeds="defaultOpeneds">
+    <el-menu
+      router
+      :collapse-transition="false"
+      :unique-opened="true"
+      :collapse="isCollapse"
+      :default-active="defaultActive"
+      :default-openeds="defaultOpeneds"
+    >
       <el-menu-item index="/dashboard" style="border-bottom: 1px solid #d9d9d9">
         <el-icon>
           <House />
@@ -19,7 +25,9 @@
         </template>
 
         <el-menu-item index="/page/page_management">页面管理</el-menu-item>
-        <el-menu-item index="/page/target_management">服务地址管理</el-menu-item>
+        <el-menu-item index="/page/target_management"
+          >服务地址管理</el-menu-item
+        >
       </el-sub-menu>
       <el-sub-menu index="/system">
         <template #title>
@@ -30,14 +38,20 @@
         </template>
 
         <el-menu-item index="/system/user_management">用户管理</el-menu-item>
-        <el-menu-item index="/system/auth_group_management">用户组管理</el-menu-item>
-        <el-menu-item index="/system/menu_management">菜单管理</el-menu-item>
+        <el-menu-item index="/system/auth_group_management"
+          >用户组管理</el-menu-item
+        >
       </el-sub-menu>
     </el-menu>
 
     <div class="collapse-box">
       <!-- <img src="@/assets/collapse.png" alt="" @click="collapseClick" /> -->
-      <svg-icon class="cvg-collapse-box" iconName="collapse" size="20" @click="collapseClick" />
+      <svg-icon
+        class="cvg-collapse-box"
+        iconName="collapse"
+        size="20"
+        @click="collapseClick"
+      />
     </div>
   </div>
 </template>

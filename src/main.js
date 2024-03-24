@@ -13,6 +13,8 @@ import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 
 import { createPinia } from 'pinia'
+import { createPersistedState } from 'pinia-plugin-persistedstate'
+
 import svgIcon from "@/components/SvgIcon/index.vue";
 import 'virtual:svg-icons-register';
 
@@ -25,6 +27,11 @@ import router from './router/index';
 import App from './App.vue'
 
 const pinia = createPinia()
+pinia.use(
+    createPersistedState({
+        auto: true,
+    })
+)
 
 let app = createApp(App)
 app.use(router)

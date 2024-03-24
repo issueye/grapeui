@@ -44,3 +44,8 @@ body,
 .el-dialog {
   --el-dialog-padding-primary: 0px;
 }
+
+/* 分页居右 */
+.el-pagination {
+  justify-content: flex-end;
+}
