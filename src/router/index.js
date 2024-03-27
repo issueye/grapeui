@@ -6,6 +6,9 @@ import UserManagement from '@/views/system/user_management/index.vue';
 import AuthGroupManagement from '@/views/system/auth_group_management/index.vue';
 import Dashboard from '@/views/dashboard/index.vue';
 
+import TargetManagement from '@/views/page_mana/source_management/index.vue';
+import PageManagement from '@/views/page_mana/page_management/index.vue';
+
 const routes = [
     {
         path: '/',
@@ -29,12 +32,12 @@ const routes = [
                     {
                         path: 'page_management',
                         name: 'PageManagement',
-                        component: UserManagement,
+                        component: PageManagement,
                     },
                     {
                         path: 'target_management',
                         name: 'TargetManagement',
-                        component: UserManagement,
+                        component: TargetManagement,
                     }
                 ],
             },

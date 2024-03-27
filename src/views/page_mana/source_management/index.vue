@@ -1,5 +1,5 @@
 <template>
-  <BsHeader :title="props.pageTitle" :description="props.pageTitle">
+  <BsHeader title="服务地址管理" description="服务地址管理">
     <template #actions>
       <el-button type="primary" @click="onAddClick">添加</el-button>
     </template>
@@ -30,54 +30,50 @@
           stripe
           auto-resize
         >
-          <solt name="table-body">
-            <vxe-column field="id" title="编码" width="150" show-overflow />
-            <vxe-column field="account" title="账户" width="130" />
-            <vxe-column field="name" title="姓名" width="150" />
-            <vxe-column field="groupName" title="用户组" width="150" />
-            <vxe-column field="mark" title="备注" />
-            <vxe-column
-              field="state"
-              title="状态"
-              width="70"
-              align="center"
-              fixed="right"
-            >
-              <template v-slot="{ row }">
-                <el-tag
-                  effect="plain"
-                  :type="row.state === 1 ? 'success' : 'danger'"
-                >
-                  {{ row.state === 1 ? "启用" : "停用" }}
-                </el-tag>
-              </template>
-            </vxe-column>
-          </solt>
+          <vxe-column field="id" title="编码" show-overflow width="150" />
+          <vxe-column field="name" title="目标地址" width="150" />
+          <vxe-column field="mark" title="备注" show-overflow min-width="300" />
+          <vxe-column
+            field="state"
+            title="状态"
+            width="70"
+            align="center"
+            fixed="right"
+          >
+            <template v-slot="{ row }">
+              <el-tag
+                effect="plain"
+                :type="row.state === 1 ? 'success' : 'danger'"
+              >
+                {{ row.state === 1 ? "启用" : "停用" }}
+              </el-tag>
+            </template>
+          </vxe-column>
           <vxe-column title="操作" width="190" align="center" fixed="right">
-              <template v-slot="{ row }">
-                <el-button
-                  type="primary"
-                  text
-                  size="small"
-                  @click="onEditStateClick(row)"
-                  >{{ row.state === 1 ? "停用" : "启用" }}</el-button
-                >
-                <el-button
-                  type="primary"
-                  text
-                  size="small"
-                  @click="onEditClick(row)"
-                  >编辑</el-button
-                >
-                <el-button
-                  type="danger"
-                  text
-                  size="small"
-                  @click="onDeleteClick(row)"
-                  >删除</el-button
-                >
-              </template>
-            </vxe-column>
+            <template v-slot="{ row }">
+              <el-button
+                type="primary"
+                text
+                size="small"
+                @click="onEditStateClick(row)"
+                >{{ row.state === 0 ? "启用" : "停用" }}</el-button
+              >
+              <el-button
+                type="primary"
+                text
+                size="small"
+                @click="onEditClick(row)"
+                >编辑</el-button
+              >
+              <el-button
+                type="danger"
+                text
+                size="small"
+                @click="onDeleteClick(row)"
+                >删除</el-button
+              >
+            </template>
+          </vxe-column>
         </vxe-table>
       </div>
       <div style="margin-top: 10px">
@@ -102,55 +98,62 @@
     :visible="visible"
     @close="onClose"
     @save="onSave"
-    @open="onOpen"
   >
     <template #body>
       <el-form
         label-width="auto"
         :model="dataForm"
-        :rules="props.rules"
+        :rules="rules"
         ref="dataFormRef"
       >
-        <slot name="dialog-box">
-          <el-form-item label="姓名" prop="name">
-            <el-input
-              v-model="dataForm.name"
-              placeholder="请输入账户"
-              clearable
-            />
-          </el-form-item>
-        </slot>
+        <el-form-item label="名称" prop="name">
+          <el-input
+            v-model="dataForm.name"
+            placeholder="请输入目标地址"
+            :disabled="dataForm.sys === 1 && operationType === 1"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input
+            v-model="dataForm.mark"
+            placeholder="请输入备注"
+            :disabled="dataForm.sys === 1 && operationType === 1"
+            type="textarea"
+            :row="2"
+            clearable
+          />
+        </el-form-item>
       </el-form>
     </template>
   </BsDialog>
 </template>
-
-<script setup>
+    
+    <script setup>
 import { onMounted, reactive, ref } from "vue";
+
 import {
-  apiUserList,
-  apiUserCreate,
-  apiUserModify,
-  apiUserDelete,
-  apiUserModifyState,
-  apiUserGroupList,
-} from "@/apis/sys/user";
+  apiTargetList,
+  apiTargetCreate,
+  apiTargetModify,
+  apiTargetModifyState,
+  apiTargetDelete,
+} from "@/apis/page/source";
 import { ElMessage, ElMessageBox } from "element-plus";
 
-const props = defineProps({
-  pageTitle: "",
-  rules: {},
-});
-
+const nameTitle = "目标地址信息";
 // 标题
 const title = ref("");
 // 显示弹窗
 const visible = ref(false);
 // 操作类型
 const operationType = ref(0);
-// 数据
+// 数据表单
 const dataFormRef = ref();
-
+// 表单验证规则
+const rules = reactive({
+  name: [{ required: true, message: "请输入目标地址", trigger: "blur" }],
+});
 // 分页
 const pageNum = ref(1);
 const pageSize = ref(10);
@@ -164,24 +167,28 @@ const form = reactive({
 // 弹窗表单
 const dataForm = reactive({
   id: "",
-  account: "",
   name: "",
-  groupId: "",
-  sys: 0,
   mark: "",
+  sys: 0,
 });
 
-onMounted(() => {});
-
+//  表格数据
 const tableData = ref([]);
 
+// 组件加载完成
+onMounted(() => {
+  getData();
+});
+
+// 获取数据
 const getData = async () => {
   let sendData = {
-    pageSize: pageSize.value,
-    pageNum: pageNum.value,
     condition: form.condition,
+    pageNum: pageNum.value,
+    pageSize: pageSize.value,
   };
-  let res = await apiUserList(sendData);
+
+  let res = await apiTargetList(sendData);
   if (res.code === 200) {
     tableData.value = res.data;
     total.value = res.pageInfo.total;
@@ -191,37 +198,37 @@ const getData = async () => {
 // 重置表单数据
 const resetForm = () => {
   dataForm.id = "";
-  dataForm.account = "";
   dataForm.name = "";
-  dataForm.groupId = "";
-  dataForm.sys = 0;
   dataForm.mark = "";
+  dataForm.sys = 0;
 };
 
 // 赋值表单数据
 const setForm = (value) => {
+  console.log("value", value);
   dataForm.id = value.id;
-  dataForm.account = value.account;
   dataForm.name = value.name;
-  dataForm.groupId = value.groupId;
-  dataForm.sys = value.sys;
   dataForm.mark = value.mark;
+  dataForm.sys = value.sys;
 };
-
-onMounted(() => {
-  getData();
-});
-
-// 事件
 
 /**
  * 添加事件
  */
 const onAddClick = () => {
   operationType.value = 0;
-  title.value = `[添加]${props.pageTitle}`;
+  title.value = `[添加]${nameTitle}`;
   resetForm();
   visible.value = true;
+};
+
+const onSizeChange = (value) => {
+  pageSize.value = value;
+  getData();
+};
+
+const onCurrentChange = () => {
+  getData();
 };
 
 const onChange = () => {
@@ -234,13 +241,13 @@ const onQryClick = () => {
 
 const onEditClick = (value) => {
   operationType.value = 1;
-  title.value = `[编辑]${props.pageTitle}`;
+  title.value = `[编辑]${nameTitle}`;
   setForm(value);
   visible.value = true;
 };
 
 const onEditStateClick = async (value) => {
-  const res = await apiUserModifyState(value.id);
+  const res = await apiTargetModifyState(value.id);
   if (res.code !== 200) {
     ElMessage.error(res.message);
     return;
@@ -257,7 +264,7 @@ const onDeleteClick = (value) => {
     type: "warning",
   })
     .then(async () => {
-      let res = await apiUserDelete(value.id);
+      let res = await apiTargetDelete(value.id);
       if (res.code !== 200) {
         ElMessage.error(res.message);
         return;
@@ -277,7 +284,7 @@ const onSave = () => {
     if (valid) {
       switch (operationType.value) {
         case 0: {
-          const res = await apiUserCreate(dataForm);
+          const res = await apiTargetCreate(dataForm);
           if (res.code !== 200) {
             ElMessage.error(res.message);
             return;
@@ -290,7 +297,7 @@ const onSave = () => {
         }
 
         case 1: {
-          const res = await apiUserModify(dataForm);
+          const res = await apiTargetModify(dataForm);
           if (res.code !== 200) {
             ElMessage.error(res.message);
             return;
@@ -308,23 +315,6 @@ const onSave = () => {
   });
 };
 
-// 弹窗打开时
-const onOpen = async () => {
-  const res = await apiUserGroupList();
-  if (res.code === 200) {
-    groupTableData.value = res.data;
-  }
-};
-
-const onSizeChange = (value) => {
-  pageSize.value = value;
-  getData();
-};
-
-const onCurrentChange = () => {
-  getData();
-};
-
 const onClose = () => {
   visible.value = false;
 
@@ -332,9 +322,10 @@ const onClose = () => {
   dataFormRef.value.resetFields();
 };
 </script>
-
-<style lang="scss">
+    
+    <style lang="scss">
 .table-box {
   height: calc(100% - 45px);
 }
 </style>
+    
