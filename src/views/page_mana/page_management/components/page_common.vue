@@ -23,9 +23,9 @@
       stripe
       auto-resize
     >
-      <vxe-column field="id" title="编码" show-overflow width="150" />
-      <vxe-column field="name" title="目标地址" width="150" />
-      <vxe-column field="mark" title="备注" show-overflow min-width="300" />
+      <vxe-column field="id" title="编码" width="150" show-overflow />
+      <vxe-column field="name" title="目标地址" width="200" show-overflow />
+      <vxe-column field="mark" title="备注" min-width="300" show-overflow />
       <vxe-column
         field="state"
         title="状态"

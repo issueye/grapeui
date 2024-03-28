@@ -42,19 +42,32 @@
       </vxe-column>
       <vxe-column title="操作" width="190" align="center" fixed="right">
         <template v-slot="{ row }">
-          <el-button
+          <!-- <el-button
             type="primary"
             text
             size="small"
             @click="onEditStateClick(row)"
             >{{ row.state === 0 ? "启用" : "停用" }}</el-button
-          >
+          > -->
           <el-button type="primary" text size="small" @click="onEditClick(row)"
             >编辑</el-button
           >
           <el-button type="danger" text size="small" @click="onDeleteClick(row)"
             >删除</el-button
           >
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              <el-button type="primary" text><el-icon><MoreFilled /></el-icon></el-button>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>Action 1</el-dropdown-item>
+                <el-dropdown-item>Action 2</el-dropdown-item>
+                <el-dropdown-item>Action 3</el-dropdown-item>
+                <el-dropdown-item>Action 4</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </template>
       </vxe-column>
     </vxe-table>
@@ -302,6 +315,10 @@ const onClose = () => {
 <style lang="scss" scoped>
 .table-box {
   height: calc(100% - 85px);
+}
+
+.el-dropdown-link:focus {
+  outline: none;
 }
 </style>
       
