@@ -41,12 +41,48 @@ export const apiPortModify = (data) => {
 
 /**
  * 修改端口号状态
- * @param {*} data 
+ * @param {*} id 
  * @returns 
  */
 export const apiPortModifyState = (id) => {
     return request({
         url: `api/v1/port/state/${id}`,
+        method: 'put',
+    })
+}
+
+/**
+ * 启动监听端口号
+ * @param {*} id 
+ * @returns 
+ */
+export const apiPortStart = (id) => {
+    return request({
+        url: `api/v1/port/start/${id}`,
+        method: 'put',
+    })
+}
+
+/**
+ * 关闭监听端口号
+ * @param {*} id 
+ * @returns 
+ */
+export const apiPortStop = (id) => {
+    return request({
+        url: `api/v1/port/stop/${id}`,
+        method: 'put',
+    })
+}
+
+/**
+ * 重启监听端口号
+ * @param {*} id 
+ * @returns 
+ */
+export const apiPortReload = (id) => {
+    return request({
+        url: `api/v1/port/reload/${id}`,
         method: 'put',
     })
 }

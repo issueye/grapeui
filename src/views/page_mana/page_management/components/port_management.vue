@@ -24,7 +24,6 @@
       stripe
       auto-resize
     >
-      <vxe-column field="id" title="编码" show-overflow width="150" />
       <vxe-column field="port" title="端口号" width="150" />
       <vxe-column field="mark" title="备注" show-overflow min-width="300" />
       <vxe-column
@@ -35,36 +34,37 @@
         fixed="right"
       >
         <template v-slot="{ row }">
-          <el-tag effect="plain" :type="row.state === 1 ? 'success' : 'danger'">
-            {{ row.state === 1 ? "启用" : "停用" }}
+          <el-tag effect="plain" :type="row.state ? 'success' : 'danger'">
+            {{ row.state ? "启用" : "停用" }}
           </el-tag>
         </template>
       </vxe-column>
-      <vxe-column title="操作" width="190" align="center" fixed="right">
+      <vxe-column title="操作" width="140" align="center" fixed="right">
         <template v-slot="{ row }">
-          <!-- <el-button
-            type="primary"
-            text
-            size="small"
-            @click="onEditStateClick(row)"
-            >{{ row.state === 0 ? "启用" : "停用" }}</el-button
-          > -->
-          <el-button type="primary" text size="small" @click="onEditClick(row)"
+          <el-button type="primary" link size="small" @click="onEditClick(row)"
             >编辑</el-button
           >
-          <el-button type="danger" text size="small" @click="onDeleteClick(row)"
+          <el-button type="danger" link size="small" @click="onDeleteClick(row)"
             >删除</el-button
           >
-          <el-dropdown>
+          <el-dropdown @command="onCommand">
             <span class="el-dropdown-link">
-              <el-button type="primary" text><el-icon><MoreFilled /></el-icon></el-button>
+              <i class="vxe-icon-ellipsis-h more-btn"></i>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>Action 1</el-dropdown-item>
-                <el-dropdown-item>Action 2</el-dropdown-item>
-                <el-dropdown-item>Action 3</el-dropdown-item>
-                <el-dropdown-item>Action 4</el-dropdown-item>
+                <el-dropdown-item :command="beforeHandleCommand('state', row)">
+                  {{ row.state ? "停用" : "启用" }}</el-dropdown-item
+                >
+                <el-dropdown-item :command="beforeHandleCommand('restart', row)"
+                  >重启</el-dropdown-item
+                >
+                <el-dropdown-item :command="beforeHandleCommand('start', row)"
+                  >开启</el-dropdown-item
+                >
+                <el-dropdown-item :command="beforeHandleCommand('stop', row)"
+                  >关闭</el-dropdown-item
+                >
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -133,6 +133,9 @@ import {
   apiPortModify,
   apiPortModifyState,
   apiPortDelete,
+  apiPortStart,
+  apiPortStop,
+  apiPortReload,
 } from "@/apis/page/port";
 import { ElMessage, ElMessageBox } from "element-plus";
 
@@ -214,6 +217,58 @@ const onAddClick = () => {
 const onSizeChange = (value) => {
   pageSize.value = value;
   getData();
+};
+
+const beforeHandleCommand = (command, row) => {
+  return {
+    command: command,
+    row: row,
+  };
+};
+
+const onCommand = async (command) => {
+  switch (command.command) {
+    case "state": {
+      const res = await apiPortModifyState(command.row.id);
+      if (res.code === 200) {
+        ElMessage.success(res.message);
+        getData();
+      } else {
+        ElMessage.error(res.message);
+      }
+      break;
+    }
+    case "start": {
+      const res = await apiPortStart(command.row.id);
+      if (res.code === 200) {
+        ElMessage.success(res.message);
+        getData();
+      } else {
+        ElMessage.error(res.message);
+      }
+      break;
+    }
+    case "stop": {
+      const res = await apiPortStop(command.row.id);
+      if (res.code === 200) {
+        ElMessage.success(res.message);
+        getData();
+      } else {
+        ElMessage.error(res.message);
+      }
+      break;
+    }
+    case "restart": {
+      const res = await apiPortReload(command.row.id);
+      if (res.code === 200) {
+        ElMessage.success(res.message);
+        getData();
+      } else {
+        ElMessage.error(res.message);
+      }
+      break;
+    }
+  }
 };
 
 const onCurrentChange = () => {
@@ -315,6 +370,13 @@ const onClose = () => {
 <style lang="scss" scoped>
 .table-box {
   height: calc(100% - 85px);
+
+  .more-btn {
+    margin-left: 12px;
+    position: relative;
+    top: 6px;
+    color: var(--el-color-primary);
+  }
 }
 
 .el-dropdown-link:focus {

@@ -2,12 +2,12 @@
   <BsHeader title="页面管理" description="页面管理" />
   <div class="main-box">
     <el-row>
-      <el-col :span="8">
+      <el-col :span="6">
         <div class="left-box">
           <PortManagement />
         </div>
       </el-col>
-      <el-col :span="16">
+      <el-col :span="18">
         <div class="right-box">
           <PageCommon />
         </div>
