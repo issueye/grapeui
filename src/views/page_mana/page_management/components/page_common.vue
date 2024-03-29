@@ -10,54 +10,14 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
+      <el-button type="primary" @click="onAddClick">添加</el-button>
     </el-form-item>
   </el-form>
 
   <div class="table-box">
-    <vxe-table
-      round
-      border
-      :data="tableData"
-      size="small"
-      height="auto"
-      stripe
-      auto-resize
-      :row-config="{isCurrent: true, isHover: true}"
-    >
-      <vxe-column field="id" title="编码" width="150" show-overflow />
-      <vxe-column field="name" title="目标地址" width="200" show-overflow />
-      <vxe-column field="mark" title="备注" min-width="300" show-overflow />
-      <vxe-column
-        field="state"
-        title="状态"
-        width="70"
-        align="center"
-        fixed="right"
-      >
-        <template v-slot="{ row }">
-          <el-tag effect="plain" :type="row.state === 1 ? 'success' : 'danger'">
-            {{ row.state === 1 ? "启用" : "停用" }}
-          </el-tag>
-        </template>
-      </vxe-column>
-      <vxe-column title="操作" width="190" align="center" fixed="right">
-        <template v-slot="{ row }">
-          <el-button
-            type="primary"
-            text
-            size="small"
-            @click="onEditStateClick(row)"
-            >{{ row.state === 0 ? "启用" : "停用" }}</el-button
-          >
-          <el-button type="primary" text size="small" @click="onEditClick(row)"
-            >编辑</el-button
-          >
-          <el-button type="danger" text size="small" @click="onDeleteClick(row)"
-            >删除</el-button
-          >
-        </template>
-      </vxe-column>
-    </vxe-table>
+    <div v-for="(data, index) in tableData" :key="index">
+      <el-card style="max-width: 480px"> {{ data }} </el-card>
+    </div>
   </div>
   <div style="margin-top: 10px">
     <el-pagination

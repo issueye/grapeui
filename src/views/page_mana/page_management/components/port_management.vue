@@ -23,7 +23,7 @@
       height="auto"
       stripe
       auto-resize
-      :row-config="{isCurrent: true, isHover: true}"
+      :row-config="{ isCurrent: true, isHover: true }"
     >
       <vxe-column field="port" title="端口号" width="150" />
       <vxe-column field="mark" title="备注" show-overflow min-width="300" />
@@ -54,9 +54,6 @@
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item :command="beforeHandleCommand('state', row)">
-                  {{ row.state ? "停用" : "启用" }}</el-dropdown-item
-                >
                 <el-dropdown-item :command="beforeHandleCommand('restart', row)"
                   >重启</el-dropdown-item
                 >

@@ -23,7 +23,7 @@ import PageCommon from "./components/page_common.vue";
       
 <style lang="scss">
 .main-box {
-  height: calc(100% - 100px);
+  height: calc(100% - 46px);
 
   .el-row {
     height: 100%;
