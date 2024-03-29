@@ -22,6 +22,7 @@
       height="auto"
       stripe
       auto-resize
+      :row-config="{isCurrent: true, isHover: true}"
     >
       <vxe-column field="id" title="编码" width="150" show-overflow />
       <vxe-column field="name" title="目标地址" width="200" show-overflow />

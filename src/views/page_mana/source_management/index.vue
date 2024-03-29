@@ -29,6 +29,7 @@
           height="100%"
           stripe
           auto-resize
+          :row-config="{isCurrent: true, isHover: true}"
         >
           <vxe-column field="id" title="编码" show-overflow width="150" />
           <vxe-column field="name" title="目标地址" width="200" show-overflow />
@@ -53,14 +54,14 @@
             <template v-slot="{ row }">
               <el-button
                 type="primary"
-                text
+                link
                 size="small"
                 @click="onEditStateClick(row)"
                 >{{ row.state === 0 ? "启用" : "停用" }}</el-button
               >
               <el-button
                 type="primary"
-                text
+                link
                 size="small"
                 @click="onEditClick(row)"
                 >编辑</el-button

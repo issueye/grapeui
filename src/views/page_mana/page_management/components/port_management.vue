@@ -23,6 +23,7 @@
       height="auto"
       stripe
       auto-resize
+      :row-config="{isCurrent: true, isHover: true}"
     >
       <vxe-column field="port" title="端口号" width="150" />
       <vxe-column field="mark" title="备注" show-overflow min-width="300" />
