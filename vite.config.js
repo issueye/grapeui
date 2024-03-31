@@ -19,4 +19,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src/'),
     }
   },
+
+  server: {
+    proxy: {
+      '/static': {
+        target: 'http://127.0.0.1:10065',
+        rewrite: (path) => path.replace(/^\/static/, "")
+      }
+    }
+  }
 })

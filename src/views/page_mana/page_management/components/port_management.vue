@@ -14,19 +14,19 @@
     </el-form-item>
   </el-form>
 
-  <div class="table-box">
+  <div class="table-box" ref="element">
     <vxe-table
       round
-      border
+      border="none"
       :data="tableData"
       size="small"
-      height="auto"
+      :height="tableHeight"
       stripe
       auto-resize
       :row-config="{ isCurrent: true, isHover: true }"
     >
-      <vxe-column field="port" title="端口号" width="150" />
-      <vxe-column field="mark" title="备注" show-overflow min-width="300" />
+      <vxe-column field="port" title="端口号" width="150" align="left" />
+      <vxe-column field="mark" title="备注" show-overflow min-width="150" />
       <vxe-column
         field="state"
         title="状态"
@@ -140,6 +140,8 @@ import { ElMessage, ElMessageBox } from "element-plus";
 const nameTitle = "端口号";
 // 标题
 const title = ref("");
+const tableHeight = ref(null);
+const element = ref();
 // 显示弹窗
 const visible = ref(false);
 // 操作类型
@@ -172,6 +174,8 @@ const tableData = ref([]);
 // 组件加载完成
 onMounted(() => {
   getData();
+
+  tableHeight.value = element.value.offsetHeight;
 });
 
 // 获取数据
@@ -368,6 +372,10 @@ const onClose = () => {
 <style lang="scss" scoped>
 .table-box {
   height: calc(100% - 85px);
+
+  ::v-deep .vxe-table--border {
+    border: none;
+  }
 
   .more-btn {
     margin-left: 12px;

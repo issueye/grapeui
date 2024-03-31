@@ -9,7 +9,14 @@
       </el-col>
       <el-col :span="18">
         <div class="right-box">
-          <PageCommon />
+          <el-tabs v-model="activeName" type="card" @tab-click="onTabsClick">
+            <el-tab-pane label="页面" name="page">
+              <PageCommon />
+            </el-tab-pane>
+            <el-tab-pane label="反向代理" name="proxy">
+              <ProxyRules />
+            </el-tab-pane>
+          </el-tabs>
         </div>
       </el-col>
     </el-row>
@@ -19,6 +26,12 @@
 <script setup>
 import PortManagement from "./components/port_management.vue";
 import PageCommon from "./components/page_common.vue";
+import ProxyRules from "./components/proxy_rules.vue";
+import { ref } from "vue";
+
+const activeName = ref("page");
+
+const onTabsClick = () => {};
 </script>
       
 <style lang="scss">
