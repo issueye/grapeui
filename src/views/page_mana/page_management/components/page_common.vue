@@ -9,7 +9,7 @@
       />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onQryClick">查询</el-button> 
+      <el-button type="primary" @click="onQryClick">查询</el-button>
       <el-button type="primary" @click="onAddClick">添加</el-button>
     </el-form-item>
   </el-form>
@@ -17,7 +17,13 @@
   <div class="table-box">
     <el-scrollbar :height="tableHeight">
       <div class="table-items">
-        <PageCard v-for="(data, index) in 10" :key="index" />
+        <PageCard
+          :data="dataForm"
+          v-for="(data, index) in 10"
+          :key="index"
+          @edit="onEditClick"
+          @delete="onDeleteClick"
+        />
       </div>
     </el-scrollbar>
   </div>
@@ -49,11 +55,25 @@
         :rules="rules"
         ref="dataFormRef"
       >
+        <el-form-item label="标题" prop="title">
+          <el-input
+            v-model="dataForm.title"
+            placeholder="请输入页面标题"
+            clearable
+          />
+        </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input
             v-model="dataForm.name"
-            placeholder="请输入目标地址"
-            :disabled="dataForm.sys === 1 && operationType === 1"
+            placeholder="请输入页面名称"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="版本" prop="version">
+          <el-input
+            v-model="dataForm.version"
+            placeholder="请输入版本"
+            :disabled="operationType === 1"
             clearable
           />
         </el-form-item>
@@ -61,7 +81,6 @@
           <el-input
             v-model="dataForm.mark"
             placeholder="请输入备注"
-            :disabled="dataForm.sys === 1 && operationType === 1"
             type="textarea"
             :row="2"
             clearable
@@ -85,7 +104,7 @@ import {
 } from "@/apis/page/node";
 import { ElMessage, ElMessageBox } from "element-plus";
 
-const nameTitle = "目标地址信息";
+const nameTitle = "页面";
 // 标题
 const title = ref("");
 const tableHeight = ref(null);
@@ -97,7 +116,9 @@ const operationType = ref(0);
 const dataFormRef = ref();
 // 表单验证规则
 const rules = reactive({
-  name: [{ required: true, message: "请输入目标地址", trigger: "blur" }],
+  title: [{ required: true, message: "请输入页面标题", trigger: "blur" }],
+  name: [{ required: true, message: "请输入页面名称", trigger: "blur" }],
+  version: [{ required: true, message: "请输入页面版本", trigger: "blur" }],
 });
 // 分页
 const pageNum = ref(1);
@@ -112,9 +133,12 @@ const form = reactive({
 // 弹窗表单
 const dataForm = reactive({
   id: "",
+  title: "",
   name: "",
+  version: "",
+  portId: "",
+  fileName: "",
   mark: "",
-  sys: 0,
 });
 
 //  表格数据
@@ -145,18 +169,23 @@ const getData = async () => {
 // 重置表单数据
 const resetForm = () => {
   dataForm.id = "";
+  dataForm.title = "";
   dataForm.name = "";
+  dataForm.version = "";
+  dataForm.portId = "";
+  dataForm.fileName = "";
   dataForm.mark = "";
-  dataForm.sys = 0;
 };
 
 // 赋值表单数据
 const setForm = (value) => {
-  console.log("value", value);
   dataForm.id = value.id;
+  dataForm.title = value.title;
   dataForm.name = value.name;
+  dataForm.version = value.version;
+  dataForm.portId = value.portId;
+  dataForm.fileName = value.fileName;
   dataForm.mark = value.mark;
-  dataForm.sys = value.sys;
 };
 
 /**
@@ -191,17 +220,6 @@ const onEditClick = (value) => {
   title.value = `[编辑]${nameTitle}`;
   setForm(value);
   visible.value = true;
-};
-
-const onEditStateClick = async (value) => {
-  const res = await apiNodeModifyState(value.id);
-  if (res.code !== 200) {
-    ElMessage.error(res.message);
-    return;
-  }
-
-  ElMessage.success(res.message);
-  getData();
 };
 
 const onDeleteClick = (value) => {
@@ -271,7 +289,7 @@ const onClose = () => {
 </script>
         
 <style lang="scss" scoped>
-.table-items{
+.table-items {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;

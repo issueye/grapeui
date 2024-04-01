@@ -55,5 +55,9 @@ const onTabsClick = () => {};
     background-color: #fff;
   }
 }
+
+.el-tabs {
+  --el-tabs-header-height: 32px;
+}
 </style>
       

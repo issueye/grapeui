@@ -35,7 +35,7 @@
         fixed="right"
       >
         <template v-slot="{ row }">
-          <div style="display: flex; justify-content: center;">
+          <div style="display: flex; justify-content: center">
             <svg-icon :iconName="row.state ? 'running' : 'stop'" size="15" />
           </div>
         </template>
@@ -373,7 +373,7 @@ const onClose = () => {
 .table-box {
   height: calc(100% - 85px);
 
-  ::v-deep .vxe-table--border {
+  ::deep .vxe-table--border {
     border: none;
   }
 
@@ -388,7 +388,7 @@ const onClose = () => {
   outline: none;
 }
 
-.el-dropdown{
+.el-dropdown {
   vertical-align: middle;
 }
 </style>

@@ -1,15 +1,12 @@
 <template>
   <el-card>
-    <el-image :src="props.imgUrl" :fit="fit" />
+    <el-image :src="data.imgUrl || defaultImg" :fit="fit" />
     <div class="body">
-      <div class="title">排队加号系统</div>
-      <div class="version">版本：v1.0.1</div>
-      <!-- <div class="description">
-        医院排队叫号系统是一种信息化服务系统，通过排队管理、叫号呼叫、预约挂号和数据统计等功能，提高就诊效率、改善就诊环境、提升服务质量并优化医疗资源分配。该系统的使用将越来越普及，为患者提供便捷高效的医疗服务。
-      </div> -->
+      <div class="title">{{ data.title }}</div>
+      <div class="version">版本：{{ data.version }}</div>
       <div class="actions">
-        <el-button color="#626aef" :icon="Edit" />
-        <el-button type="primary" :icon="Delete" />
+        <el-button color="#626aef" :icon="Edit" @click="onEditClick" />
+        <el-button type="primary" :icon="Delete" @click="onDeleteClick" />
       </div>
     </div>
   </el-card>
@@ -17,13 +14,34 @@
 
 <script setup>
 import { Delete, Edit, Search, Share, Upload } from "@element-plus/icons-vue";
+import { ref, toRefs } from "vue";
+import defaultImg from "@/assets/images/default.png";
 
 const props = defineProps({
-  imgUrl: {
-    type: String,
-    default: "/static/www/images/page-00002.jpg",
+  data: {
+    id: "",
+    title: "",
+    name: "",
+    version: "",
+    portId: "",
+    fileName: "",
+    mark: "",
+    imlUrl: "static/www/images/page-00003.jpg",
   },
 });
+
+const { data } = toRefs(props);
+console.log("data", data);
+
+const emits = defineEmits(["edit", "delete"]);
+
+const onEditClick = () => {
+  emits("edit", props.data);
+};
+
+const onDeleteClick = () => {
+  emits("delete", props.data);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -62,21 +80,10 @@ const props = defineProps({
       font-size: 14px;
       color: #bcbcbc;
     }
-
-    .description {
-      margin-top: 15px;
-      font-size: 12px;
-      color: #bcbcbc;
-      text-overflow: ellipsis;
-      -webkit-line-clamp: 2; //行数
-      -webkit-box-orient: vertical;
-      display: -webkit-box;
-      overflow: hidden;
-    }
   }
 }
 
-::v-deep .el-card__body {
+::deep .el-card__body {
   padding: 0px;
 }
 </style>
