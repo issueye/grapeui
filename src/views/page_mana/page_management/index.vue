@@ -2,12 +2,12 @@
   <BsHeader title="页面管理" description="页面管理" />
   <div class="main-box">
     <el-row>
-      <el-col :span="6">
+      <el-col :span="7">
         <div class="left-box">
           <PortManagement />
         </div>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="17">
         <div class="right-box">
           <el-tabs v-model="activeName" type="card" @tab-click="onTabsClick">
             <el-tab-pane label="页面" name="page">

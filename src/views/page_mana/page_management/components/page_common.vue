@@ -9,13 +9,17 @@
       />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onQryClick">查询</el-button>
+      <el-button type="primary" @click="onQryClick">查询</el-button> 
       <el-button type="primary" @click="onAddClick">添加</el-button>
     </el-form-item>
   </el-form>
 
   <div class="table-box">
-    <PageCard v-for="(data, index) in 10" :key="index" />
+    <el-scrollbar :height="tableHeight">
+      <div class="table-items">
+        <PageCard v-for="(data, index) in 10" :key="index" />
+      </div>
+    </el-scrollbar>
   </div>
   <div style="margin-top: 10px">
     <el-pagination
@@ -84,6 +88,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 const nameTitle = "目标地址信息";
 // 标题
 const title = ref("");
+const tableHeight = ref(null);
 // 显示弹窗
 const visible = ref(false);
 // 操作类型
@@ -118,6 +123,8 @@ const tableData = ref([]);
 // 组件加载完成
 onMounted(() => {
   getData();
+
+  tableHeight.value = document.documentElement.clientHeight - 276;
 });
 
 // 获取数据
@@ -264,11 +271,14 @@ const onClose = () => {
 </script>
         
 <style lang="scss" scoped>
-.table-box {
-  height: calc(100% - 85px);
+.table-items{
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
+}
+
+.table-box {
+  height: 100%;
 }
 </style>
         

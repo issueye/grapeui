@@ -4,9 +4,9 @@
     <div class="body">
       <div class="title">排队加号系统</div>
       <div class="version">版本：v1.0.1</div>
-      <div class="description">
+      <!-- <div class="description">
         医院排队叫号系统是一种信息化服务系统，通过排队管理、叫号呼叫、预约挂号和数据统计等功能，提高就诊效率、改善就诊环境、提升服务质量并优化医疗资源分配。该系统的使用将越来越普及，为患者提供便捷高效的医疗服务。
-      </div>
+      </div> -->
       <div class="actions">
         <el-button color="#626aef" :icon="Edit" />
         <el-button type="primary" :icon="Delete" />
@@ -35,8 +35,8 @@ const props = defineProps({
 
 .el-card {
   margin: 10px;
-  width: 300px;
-  height: 400px;
+  width: 260px;
+  height: 300px;
 
   .el-image {
     width: 100%;
@@ -52,13 +52,13 @@ const props = defineProps({
     }
 
     .actions {
-      margin-top: 42px;
+      margin-top: 15px;
       display: flex;
       justify-content: flex-end;
     }
 
     .version {
-      margin-top: 15px;
+      margin-top: 10px;
       font-size: 14px;
       color: #bcbcbc;
     }

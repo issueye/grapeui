@@ -25,8 +25,8 @@
       auto-resize
       :row-config="{ isCurrent: true, isHover: true }"
     >
-      <vxe-column field="port" title="端口号" width="150" align="left" />
-      <vxe-column field="mark" title="备注" show-overflow min-width="150" />
+      <vxe-column field="port" title="端口号" width="100" align="left" />
+      <vxe-column field="mark" title="备注" show-overflow />
       <vxe-column
         field="state"
         title="状态"
@@ -35,12 +35,12 @@
         fixed="right"
       >
         <template v-slot="{ row }">
-          <el-tag effect="plain" :type="row.state ? 'success' : 'danger'">
-            {{ row.state ? "启用" : "停用" }}
-          </el-tag>
+          <div style="display: flex; justify-content: center;">
+            <svg-icon :iconName="row.state ? 'running' : 'stop'" size="15" />
+          </div>
         </template>
       </vxe-column>
-      <vxe-column title="操作" width="140" align="center" fixed="right">
+      <vxe-column title="操作" width="120" align="center" fixed="right">
         <template v-slot="{ row }">
           <el-button type="primary" link size="small" @click="onEditClick(row)"
             >编辑</el-button
@@ -175,7 +175,7 @@ const tableData = ref([]);
 onMounted(() => {
   getData();
 
-  tableHeight.value = element.value.offsetHeight;
+  tableHeight.value = document.documentElement.clientHeight - 240;
 });
 
 // 获取数据
@@ -380,13 +380,16 @@ const onClose = () => {
   .more-btn {
     margin-left: 12px;
     position: relative;
-    top: 6px;
     color: var(--el-color-primary);
   }
 }
 
 .el-dropdown-link:focus {
   outline: none;
+}
+
+.el-dropdown{
+  vertical-align: middle;
 }
 </style>
       
