@@ -17,7 +17,7 @@
   <div class="table-box" ref="element">
     <vxe-table
       round
-      border="none"
+      border
       :data="tableData"
       size="small"
       :height="tableHeight"
@@ -103,7 +103,7 @@
             v-model="dataForm.port"
             placeholder="请输入端口号"
             clearable
-            style="width: auto"
+            style="width: 100%"
             :disabled="operationType == 1"
           />
         </el-form-item>

@@ -43,7 +43,7 @@
 
   <BsDialog
     :title="title"
-    :width="500"
+    :width="700"
     :visible="visible"
     @close="onClose"
     @save="onSave"
@@ -55,28 +55,47 @@
         :rules="rules"
         ref="dataFormRef"
       >
-        <el-form-item label="标题" prop="title">
-          <el-input
-            v-model="dataForm.title"
-            placeholder="请输入页面标题"
-            clearable
-          />
-        </el-form-item>
-        <el-form-item label="名称" prop="name">
-          <el-input
-            v-model="dataForm.name"
-            placeholder="请输入页面名称"
-            clearable
-          />
-        </el-form-item>
-        <el-form-item label="版本" prop="version">
-          <el-input
-            v-model="dataForm.version"
-            placeholder="请输入版本"
-            :disabled="operationType === 1"
-            clearable
-          />
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="标题" prop="title">
+              <el-input
+                v-model="dataForm.title"
+                placeholder="请输入页面标题"
+                clearable
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="版本" prop="version">
+              <el-input
+                v-model="dataForm.version"
+                placeholder="请输入版本"
+                :disabled="operationType === 1"
+                clearable
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="20">
+          <el-col>
+            <el-form-item label="名称" prop="name">
+              <div class="item">
+                <el-input
+                  v-model="dataForm.name"
+                  placeholder="请输入页面名称"
+                  clearable
+                  style="margin-right: 5px"
+                />
+                <el-upload :show-file-list="false" http-request="uploadFile">
+                  <el-button size="mini" type="primary">上传</el-button>
+                </el-upload>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12"> </el-col>
+        </el-row>
+
         <el-form-item label="备注">
           <el-input
             v-model="dataForm.mark"
@@ -188,6 +207,8 @@ const setForm = (value) => {
   dataForm.mark = value.mark;
 };
 
+const uploadFile = () => {};
+
 /**
  * 添加事件
  */
@@ -293,6 +314,11 @@ const onClose = () => {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
+}
+
+.item {
+  display: flex;
+  width: 100%;
 }
 
 .table-box {
