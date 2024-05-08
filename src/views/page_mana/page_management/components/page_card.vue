@@ -2,19 +2,23 @@
   <el-card>
     <el-image :src="data.imgUrl || defaultImg" :fit="fit" />
     <div class="body">
-      <div class="title">{{ data.title }}</div>
-      <div class="version">版本：{{ data.version }}</div>
-      <div class="actions">
-        <el-button color="#626aef" :icon="Edit" @click="onEditClick" />
-        <el-button type="primary" :icon="Delete" @click="onDeleteClick" />
+      <div class="title">
+        {{ data.title ? data.title : "这是一条测试内容" }}
       </div>
+      <div class="version">
+        版本：{{ data.version ? data.version : "v1.0.0.beta" }}
+      </div>
+    </div>
+    <div class="actions">
+      <el-button color="#626aef" :icon="Edit" @click="onEditClick" />
+      <el-button type="primary" :icon="Delete" @click="onDeleteClick" />
     </div>
   </el-card>
 </template>
 
 <script setup>
 import { Delete, Edit, Search, Share, Upload } from "@element-plus/icons-vue";
-import { ref, toRefs } from "vue";
+import { ref, toRefs, version } from "vue";
 import defaultImg from "@/assets/images/default.png";
 
 const props = defineProps({
@@ -54,25 +58,20 @@ const onDeleteClick = () => {
 .el-card {
   margin: 10px;
   width: 260px;
-  height: 300px;
+  height: 280px;
 
   .el-image {
     width: 100%;
-    height: auto;
+    height: 150px;
+    object-fit: none;
   }
 
   .body {
-    padding: 10px;
-
+    height: 52px;
     .title {
-      font-size: 26px;
+      margin: 10px 0;
+      font-size: 16px;
       font-weight: 500;
-    }
-
-    .actions {
-      margin-top: 15px;
-      display: flex;
-      justify-content: flex-end;
     }
 
     .version {
@@ -81,9 +80,15 @@ const onDeleteClick = () => {
       color: #bcbcbc;
     }
   }
+
+  .actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 
-::deep .el-card__body {
-  padding: 0px;
+::v-deep .el-card__body {
+  padding: 10px;
 }
 </style>

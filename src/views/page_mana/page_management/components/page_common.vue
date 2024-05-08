@@ -101,8 +101,26 @@
             v-model="dataForm.mark"
             placeholder="请输入备注"
             type="textarea"
-            :row="2"
+            :row="5"
             clearable
+          />
+        </el-form-item>
+
+        <el-form-item label="简略图">
+          <el-upload
+            v-model:file-list="fileList"
+            action=""
+            list-type="picture-card"
+            :on-preview="onPictureCardPreview"
+            :on-remove="onRemove"
+          >
+            <el-icon><Plus /></el-icon>
+          </el-upload>
+          <el-image-viewer
+            v-if="showImagePreview"
+            :zoom-rate="1.2"
+            @close="closePreview"
+            :url-list="imgPreviewList"
           />
         </el-form-item>
       </el-form>
@@ -129,6 +147,8 @@ const title = ref("");
 const tableHeight = ref(null);
 // 显示弹窗
 const visible = ref(false);
+// 显示图片预览
+const showImagePreview = ref(false);
 // 操作类型
 const operationType = ref(0);
 // 数据表单
@@ -159,6 +179,8 @@ const dataForm = reactive({
   fileName: "",
   mark: "",
 });
+
+const fileList = ref([]);
 
 //  表格数据
 const tableData = ref([]);
@@ -208,6 +230,21 @@ const setForm = (value) => {
 };
 
 const uploadFile = () => {};
+
+const onPictureCardPreview = () => {
+  imgPreviewList.value = fileList.value.url;
+  showImagePreview.value = true;
+};
+
+const onRemove = () => {
+  fileList.value = [];
+};
+
+const closePreview = () => {
+  showImagePreview.value = false;
+};
+
+const imgPreviewList = ref([]);
 
 /**
  * 添加事件
