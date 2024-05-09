@@ -139,7 +139,7 @@ import {
   apiTargetModify,
   apiTargetModifyState,
   apiTargetDelete,
-} from "@/apis/page/source";
+} from "@/apis/page/target";
 import { ElMessage, ElMessageBox } from "element-plus";
 
 const nameTitle = "目标地址信息";

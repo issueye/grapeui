@@ -22,10 +22,10 @@ export default defineConfig({
 
   server: {
     proxy: {
-      '/static': {
+      '/resources': {
         target: 'http://127.0.0.1:10065',
-        rewrite: (path) => path.replace(/^\/static/, "")
-      }
+        rewrite: (path) => path.replace(/^\/resources/, "/resources")
+      },
     }
   }
 })

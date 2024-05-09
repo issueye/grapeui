@@ -6,7 +6,8 @@ import UserManagement from '@/views/system/user_management/index.vue';
 import AuthGroupManagement from '@/views/system/auth_group_management/index.vue';
 import Dashboard from '@/views/dashboard/index.vue';
 
-import TargetManagement from '@/views/page_mana/source_management/index.vue';
+import TargetManagement from '@/views/page_mana/target_management/index.vue';
+import ResourceManagement from '@/views/page_mana/resource_management/index.vue';
 import PageManagement from '@/views/page_mana/page_management/index.vue';
 
 const routes = [
@@ -38,6 +39,11 @@ const routes = [
                         path: 'target_management',
                         name: 'TargetManagement',
                         component: TargetManagement,
+                    },
+                    {
+                        path: 'resource_management',
+                        name: 'ResourceManagement',
+                        component: ResourceManagement,
                     }
                 ],
             },

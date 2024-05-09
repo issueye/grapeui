@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    draggable
     v-model="props.visible"
     :title="props.title"
     :width="props.width"

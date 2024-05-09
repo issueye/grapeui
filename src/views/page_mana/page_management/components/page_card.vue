@@ -88,7 +88,7 @@ const onDeleteClick = () => {
   }
 }
 
-::v-deep .el-card__body {
+::v-deep(.el-card__body) {
   padding: 10px;
 }
 </style>

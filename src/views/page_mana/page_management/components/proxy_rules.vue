@@ -355,7 +355,7 @@ const onClose = () => {
 .table-box {
   height: calc(100% - 85px);
 
-  ::v-deep .vxe-table--border {
+  ::v-deep(.vxe-table--border) {
     border: none;
   }
 

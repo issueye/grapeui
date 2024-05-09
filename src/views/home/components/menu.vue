@@ -25,9 +25,8 @@
         </template>
 
         <el-menu-item index="/page/page_management">页面管理</el-menu-item>
-        <el-menu-item index="/page/target_management"
-          >服务地址管理</el-menu-item
-        >
+        <el-menu-item index="/page/target_management">服务地址管理</el-menu-item>
+        <el-menu-item index="/page/resource_management">资源管理</el-menu-item>
       </el-sub-menu>
       <el-sub-menu index="/system">
         <template #title>
