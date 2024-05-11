@@ -16,7 +16,7 @@
   <div class="table-box">
     <el-scrollbar :height="250">
       <div class="table-items">
-        <div v-for="(item, index) in tableData" :key="index">
+        <div v-for="(item, index) in tableData" :key="index" style="margin: 2px; padding: 2px" :style="{ border: imgVars[index] }" @click="onImgClick(index)">
           <el-image
             style="width: 100px; height: 100px; margin: 2px"
             :src="`/resources/${item.fileName}${item.ext}`"
@@ -56,12 +56,18 @@ const form = reactive({
   condition: "",
 });
 
+const imgVars = ref({});
+
 //  表格数据
 const tableData = ref([]);
 
 onMounted(() => {
   getData();
 });
+
+const onImgClick = (index) => {
+  imgVars.value[index] = '1px solid #397AFD'
+}
 
 const getData = async () => {
   let sendData = {
@@ -72,6 +78,12 @@ const getData = async () => {
 
   let res = await apiResourceList(sendData);
   if (res.code === 200) {
+    const data = [ ...res.data ];
+
+    for (index = 0; index < data.length; index++) {
+      imgVars.value[index] = '1px solid #D9D9D9'
+    }
+
     tableData.value = res.data;
     total.value = res.pageInfo.total;
   }

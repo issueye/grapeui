@@ -101,7 +101,7 @@
         </el-row>
 
         <el-row :gutter="20">
-          <el-col :span="12">
+          <el-col :span="16">
             <el-form-item label="名称" prop="fileName">
               <el-input
                 v-model="dataForm.fileName"
@@ -111,7 +111,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="类型" prop="ext">
               <el-input
                 v-model="dataForm.ext"

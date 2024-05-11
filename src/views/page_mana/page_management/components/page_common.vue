@@ -1,12 +1,7 @@
 <template>
   <el-form inline>
     <el-form-item label="检索">
-      <el-input
-        v-model="form.condition"
-        placeholder="请输入检索内容"
-        clearable
-        @change="onChange"
-      />
+      <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange" />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
@@ -17,62 +12,29 @@
   <div class="table-box">
     <el-scrollbar :height="tableHeight">
       <div class="table-items">
-        <PageCard
-          :data="dataForm"
-          v-for="(data, index) in 10"
-          :key="index"
-          @edit="onEditClick"
-          @delete="onDeleteClick"
-        />
+        <PageCard :data="dataForm" v-for="(data, index) in 10" :key="index" @edit="onEditClick"
+          @delete="onDeleteClick" />
       </div>
     </el-scrollbar>
   </div>
   <div style="margin-top: 10px">
-    <el-pagination
-      small
-      background
-      :current-page="pageNum"
-      :page-size="pageSize"
-      :page-sizes="[5, 10, 20]"
-      :total="total"
-      layout="total, sizes, prev, pager, next"
-      @size-change="onSizeChange"
-      @current-change="onCurrentChange"
-    />
+    <el-pagination small background :current-page="pageNum" :page-size="pageSize" :page-sizes="[5, 10, 20]"
+      :total="total" layout="total, sizes, prev, pager, next" @size-change="onSizeChange"
+      @current-change="onCurrentChange" />
   </div>
 
-  <BsDialog
-    :title="title"
-    :width="700"
-    :visible="visible"
-    @close="onClose"
-    @save="onSave"
-  >
+  <BsDialog :title="title" :width="700" :visible="visible" @close="onClose" @save="onSave">
     <template #body>
-      <el-form
-        label-width="auto"
-        :model="dataForm"
-        :rules="rules"
-        ref="dataFormRef"
-      >
+      <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="标题" prop="title">
-              <el-input
-                v-model="dataForm.title"
-                placeholder="请输入页面标题"
-                clearable
-              />
+              <el-input v-model="dataForm.title" placeholder="请输入页面标题" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="版本" prop="version">
-              <el-input
-                v-model="dataForm.version"
-                placeholder="请输入版本"
-                :disabled="operationType === 1"
-                clearable
-              />
+              <el-input v-model="dataForm.version" placeholder="请输入版本" :disabled="operationType === 1" clearable />
             </el-form-item>
           </el-col>
         </el-row>
@@ -81,12 +43,7 @@
           <el-col>
             <el-form-item label="名称" prop="name">
               <div class="item">
-                <el-input
-                  v-model="dataForm.name"
-                  placeholder="请输入页面名称"
-                  clearable
-                  style="margin-right: 5px"
-                />
+                <el-input v-model="dataForm.name" placeholder="请输入页面名称" clearable style="margin-right: 5px" />
                 <el-upload :show-file-list="false" http-request="uploadFile">
                   <el-button size="mini" type="primary">上传</el-button>
                 </el-upload>
@@ -97,28 +54,25 @@
         </el-row>
 
         <el-form-item label="备注">
-          <el-input
-            v-model="dataForm.mark"
-            placeholder="请输入备注"
-            type="textarea"
-            :row="5"
-            clearable
-          />
+          <el-input v-model="dataForm.mark" placeholder="请输入备注" type="textarea" :row="5" clearable />
         </el-form-item>
 
         <el-form-item label="简略图">
-          <el-popover placement="right" :width="700" trigger="click">
-            <template #reference>
-              <el-button type="primary" @click="onQryClick">选择资源</el-button>
-            </template>
-            <BsResources />
-          </el-popover>
+          <div :style="{display: 'flex'}">
+            <el-image style="width: 100px; height: 100px" :src="dataForm.thumbnail" fit="cover" />
+            <el-popover placement="right" :width="700" trigger="click">
+              <template #reference>
+                <el-button style="margin-left: 10px" type="primary" @click="onQryClick">选择资源</el-button>
+              </template>
+              <BsResources />
+            </el-popover>
+          </div>
         </el-form-item>
       </el-form>
     </template>
   </BsDialog>
 </template>
-        
+
 <script setup>
 import { onMounted, reactive, ref } from "vue";
 import PageCard from "./page_card.vue";
@@ -168,6 +122,7 @@ const dataForm = reactive({
   version: "",
   portId: "",
   fileName: "",
+  thumbnail: "",
   mark: "",
 });
 
@@ -220,7 +175,7 @@ const setForm = (value) => {
   dataForm.mark = value.mark;
 };
 
-const uploadFile = () => {};
+const uploadFile = () => { };
 
 const onPictureCardPreview = () => {
   imgPreviewList.value = fileList.value.url;
@@ -336,7 +291,7 @@ const onClose = () => {
   dataFormRef.value.resetFields();
 };
 </script>
-        
+
 <style lang="scss" scoped>
 .table-items {
   display: flex;
@@ -353,4 +308,3 @@ const onClose = () => {
   height: 100%;
 }
 </style>
-        
