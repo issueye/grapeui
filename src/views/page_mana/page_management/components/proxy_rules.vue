@@ -24,11 +24,16 @@
       auto-resize
       :row-config="{ isCurrent: true, isHover: true }"
     >
-      <vxe-column field="port" title="匹配路由" width="150" align="left" />
-      <vxe-column field="port" title="目标路由" width="150" align="left" />
-      <vxe-column field="port" title="请求方法" width="150" align="left" />
-      <vxe-column field="port" title="目标地址" width="150" align="left" />
-      <vxe-column field="port" title="匹配模式" width="150" align="left" />
+      <vxe-column field="path" title="匹配路由" width="150" align="left" />
+      <vxe-column
+        field="targetPath"
+        title="目标路由"
+        width="150"
+        align="left"
+      />
+      <vxe-column field="method" title="请求方法" width="150" align="left" />
+      <vxe-column field="target" title="目标地址" width="150" align="left" />
+      <vxe-column field="matchType" title="匹配模式" width="150" align="left" />
       <vxe-column field="mark" title="备注" show-overflow min-width="150" />
       <vxe-column
         field="state"

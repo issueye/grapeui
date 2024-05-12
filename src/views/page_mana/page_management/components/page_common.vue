@@ -1,40 +1,79 @@
 <template>
   <el-form inline>
     <el-form-item label="检索">
-      <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange" />
+      <el-input
+        v-model="form.condition"
+        placeholder="请输入检索内容"
+        clearable
+        @change="onChange"
+      />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
       <el-button type="primary" @click="onAddClick">添加</el-button>
+      <el-button type="primary" @click="onUploadClick">上传</el-button>
     </el-form-item>
   </el-form>
 
   <div class="table-box">
     <el-scrollbar :height="tableHeight">
       <div class="table-items">
-        <PageCard :data="dataForm" v-for="(data, index) in 10" :key="index" @edit="onEditClick"
-          @delete="onDeleteClick" />
+        <PageCard
+          :data="dataForm"
+          v-for="(data, index) in 10"
+          :key="index"
+          @edit="onEditClick"
+          @delete="onDeleteClick"
+        />
       </div>
     </el-scrollbar>
   </div>
   <div style="margin-top: 10px">
-    <el-pagination small background :current-page="pageNum" :page-size="pageSize" :page-sizes="[5, 10, 20]"
-      :total="total" layout="total, sizes, prev, pager, next" @size-change="onSizeChange"
-      @current-change="onCurrentChange" />
+    <el-pagination
+      small
+      background
+      :current-page="pageNum"
+      :page-size="pageSize"
+      :page-sizes="[5, 10, 20]"
+      :total="total"
+      layout="total, sizes, prev, pager, next"
+      @size-change="onSizeChange"
+      @current-change="onCurrentChange"
+    />
   </div>
 
-  <BsDialog :title="title" :width="700" :visible="visible" @close="onClose" @save="onSave">
+  <BsDialog
+    :title="title"
+    :width="700"
+    :visible="visible"
+    @close="onClose"
+    @save="onSave"
+  >
     <template #body>
-      <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
+      <el-form
+        label-width="auto"
+        :model="dataForm"
+        :rules="rules"
+        ref="dataFormRef"
+      >
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="标题" prop="title">
-              <el-input v-model="dataForm.title" placeholder="请输入页面标题" clearable />
+              <el-input
+                v-model="dataForm.title"
+                placeholder="请输入页面标题"
+                clearable
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="版本" prop="version">
-              <el-input v-model="dataForm.version" placeholder="请输入版本" :disabled="operationType === 1" clearable />
+              <el-input
+                v-model="dataForm.version"
+                placeholder="请输入版本"
+                :disabled="operationType === 1"
+                clearable
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -43,10 +82,11 @@
           <el-col>
             <el-form-item label="名称" prop="name">
               <div class="item">
-                <el-input v-model="dataForm.name" placeholder="请输入页面名称" clearable style="margin-right: 5px" />
-                <el-upload :show-file-list="false" http-request="uploadFile">
-                  <el-button size="mini" type="primary">上传</el-button>
-                </el-upload>
+                <el-input
+                  v-model="dataForm.name"
+                  placeholder="请输入页面名称"
+                  clearable
+                />
               </div>
             </el-form-item>
           </el-col>
@@ -54,21 +94,73 @@
         </el-row>
 
         <el-form-item label="备注">
-          <el-input v-model="dataForm.mark" placeholder="请输入备注" type="textarea" :row="5" clearable />
+          <el-input
+            v-model="dataForm.mark"
+            placeholder="请输入备注"
+            type="textarea"
+            :row="5"
+            clearable
+          />
         </el-form-item>
 
         <el-form-item label="简略图">
-          <div :style="{display: 'flex'}">
-            <el-image style="width: 100px; height: 100px" :src="dataForm.thumbnail" fit="cover" />
-            <el-popover placement="right" :width="700" trigger="click">
+          <div :style="{ display: 'flex' }">
+            <el-image
+              style="width: 100px; height: 100px"
+              :src="
+                dataForm.thumbnail ? getPath(dataForm.thumbnail) : defaultImage
+              "
+              fit="cover"
+            />
+            <el-popover
+              placement="right"
+              :visible="resourceVisible"
+              :width="700"
+              trigger="click"
+            >
               <template #reference>
-                <el-button style="margin-left: 10px" type="primary" @click="onQryClick">选择资源</el-button>
+                <el-button
+                  style="margin-left: 10px"
+                  type="primary"
+                  @click="onQryClick"
+                  >选择资源</el-button
+                >
               </template>
-              <BsResources />
+              <BsResources @onSelect="onSelect" />
             </el-popover>
           </div>
         </el-form-item>
       </el-form>
+    </template>
+  </BsDialog>
+
+  <BsDialog
+    title="页面上传"
+    :width="500"
+    :visible="uploadVisible"
+    @close="onUploadClose"
+    @save="onUploadSave"
+  >
+    <template #body>
+      <div style="padding: 24px">
+        <el-upload
+          drag
+          :http-request="onUpload"
+          action=""
+          multiple
+          :on-progress="onProgress"
+          :show-file-list="false"
+        >
+          <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+          <div class="el-upload__text">
+            移动文件到这里或者 <em>点击上传</em>
+          </div>
+        </el-upload>
+      </div>
+      <div>
+        <div style="margin: 10px 0 10px 0">准备上传页面文件</div>
+        <el-progress :percentage="50" :stroke-width="15" striped />
+      </div>
     </template>
   </BsDialog>
 </template>
@@ -76,14 +168,16 @@
 <script setup>
 import { onMounted, reactive, ref } from "vue";
 import PageCard from "./page_card.vue";
+import { getImgPath } from "@/utils/utils";
+import defaultImage from "@/assets/images/default.png";
 
 import {
-  apiNodeList,
-  apiNodeCreate,
-  apiNodeModify,
-  apiNodeModifyState,
-  apiNodeDelete,
-} from "@/apis/page/node";
+  apiPageList,
+  apiPageCreate,
+  apiPageModify,
+  apiPageModifyState,
+  apiPageDelete,
+} from "@/apis/page/page";
 import { ElMessage, ElMessageBox } from "element-plus";
 
 const nameTitle = "页面";
@@ -109,6 +203,8 @@ const pageNum = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
 
+const resourceVisible = ref(false);
+
 // 查询表单
 const form = reactive({
   condition: "",
@@ -126,7 +222,24 @@ const dataForm = reactive({
   mark: "",
 });
 
+const uploadVisible = ref(false);
+
+const onUpload = () => {};
+
 const fileList = ref([]);
+
+const getPath = (name) => {
+  const info = name.split(".");
+  return getImgPath(info[0], info[1]);
+};
+
+const onSelect = (value) => {
+  console.log("value", value);
+
+  resourceVisible.value = false;
+
+  dataForm.thumbnail = value;
+};
 
 //  表格数据
 const tableData = ref([]);
@@ -146,7 +259,7 @@ const getData = async () => {
     pageSize: pageSize.value,
   };
 
-  let res = await apiNodeList(sendData);
+  let res = await apiPageList(sendData);
   if (res.code === 200) {
     tableData.value = res.data;
     total.value = res.pageInfo.total;
@@ -175,22 +288,9 @@ const setForm = (value) => {
   dataForm.mark = value.mark;
 };
 
-const uploadFile = () => { };
-
-const onPictureCardPreview = () => {
-  imgPreviewList.value = fileList.value.url;
-  showImagePreview.value = true;
+const onProgress = (event, file, fileList) => {
+  console.log(event, file, fileList);
 };
-
-const onRemove = () => {
-  fileList.value = [];
-};
-
-const closePreview = () => {
-  showImagePreview.value = false;
-};
-
-const imgPreviewList = ref([]);
 
 /**
  * 添加事件
@@ -201,6 +301,14 @@ const onAddClick = () => {
   resetForm();
   visible.value = true;
 };
+
+const onUploadClick = () => {
+  uploadVisible.value = true;
+};
+const onUploadClose = () => {
+  uploadVisible.value = false;
+};
+const onUploadSave = () => {};
 
 const onSizeChange = (value) => {
   pageSize.value = value;
@@ -216,7 +324,8 @@ const onChange = () => {
 };
 
 const onQryClick = () => {
-  getData();
+  // getData();
+  resourceVisible.value = true;
 };
 
 const onEditClick = (value) => {
@@ -233,7 +342,7 @@ const onDeleteClick = (value) => {
     type: "warning",
   })
     .then(async () => {
-      let res = await apiNodeDelete(value.id);
+      let res = await apiPageDelete(value.id);
       if (res.code !== 200) {
         ElMessage.error(res.message);
         return;
@@ -253,7 +362,7 @@ const onSave = () => {
     if (valid) {
       switch (operationType.value) {
         case 0: {
-          const res = await apiNodeCreate(dataForm);
+          const res = await apiPageCreate(dataForm);
           if (res.code !== 200) {
             ElMessage.error(res.message);
             return;
@@ -266,7 +375,7 @@ const onSave = () => {
         }
 
         case 1: {
-          const res = await apiNodeModify(dataForm);
+          const res = await apiPageModify(dataForm);
           if (res.code !== 200) {
             ElMessage.error(res.message);
             return;

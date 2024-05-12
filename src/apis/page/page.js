@@ -5,9 +5,9 @@ import request from '../axios';
  * @param {*} params 
  * @returns 
  */
-export const apiNodeList = (params) => {
+export const apiPageList = (params) => {
     return request({
-        url: 'api/v1/node',
+        url: 'api/v1/page',
         method: 'get',
         params: params,
     })
@@ -18,9 +18,9 @@ export const apiNodeList = (params) => {
  * @param {*} data 
  * @returns 
  */
-export const apiNodeCreate = (data) => {
+export const apiPageCreate = (data) => {
     return request({
-        url: 'api/v1/node',
+        url: 'api/v1/page',
         method: 'post',
         data: data,
     })
@@ -31,9 +31,9 @@ export const apiNodeCreate = (data) => {
  * @param {*} data 
  * @returns 
  */
-export const apiNodeModify = (data) => {
+export const apiPageModify = (data) => {
     return request({
-        url: `api/v1/node/${data.id}`,
+        url: `api/v1/page/${data.id}`,
         method: 'put',
         data: data,
     })
@@ -44,9 +44,9 @@ export const apiNodeModify = (data) => {
  * @param {*} data 
  * @returns 
  */
-export const apiNodeModifyState = (id) => {
+export const apiPageModifyState = (id) => {
     return request({
-        url: `api/v1/node/state/${id}`,
+        url: `api/v1/page/state/${id}`,
         method: 'put',
     })
 }
@@ -57,9 +57,9 @@ export const apiNodeModifyState = (id) => {
  * @data {*} data 
  * @returns 
  */
-export const apiNodeDelete = (id) => {
+export const apiPageDelete = (id) => {
     return request({
-        url: `api/v1/node/${id}`,
+        url: `api/v1/page/${id}`,
         method: 'delete',
     })
 }

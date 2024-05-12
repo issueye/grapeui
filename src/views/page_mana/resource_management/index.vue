@@ -33,9 +33,19 @@
         >
           <vxe-column field="id" title="编码" width="150" show-overflow />
           <vxe-column field="title" title="标题" width="150" show-overflow />
-          <vxe-column field="fileName" title="文件名称" width="200" show-overflow />
+          <vxe-column
+            field="fileName"
+            title="文件名称"
+            width="200"
+            show-overflow
+          />
           <vxe-column field="ext" title="文件类型" width="200" show-overflow />
-          <vxe-column field="createdAt" title="创建时间" width="200" show-overflow />
+          <vxe-column
+            field="createdAt"
+            title="创建时间"
+            width="200"
+            show-overflow
+          />
           <vxe-column field="mark" title="备注" min-width="300" show-overflow />
           <vxe-column title="操作" width="190" align="center" fixed="right">
             <template v-slot="{ row }">
@@ -133,7 +143,11 @@
           />
         </el-form-item>
         <el-form-item label="资源">
-          <BsUpload :name="getFileName()" @upload="onUpload" @unUpload="unUpload" />
+          <BsUpload
+            :name="getFileName()"
+            @upload="onUpload"
+            @unUpload="unUpload"
+          />
         </el-form-item>
       </el-form>
     </template>
@@ -214,19 +228,19 @@ onMounted(() => {
 
 const getFileName = () => {
   return dataForm.fileName + dataForm.ext;
-}
+};
 
 const onUpload = async (data) => {
-  console.log('data', data);
+  console.log("data", data);
 
   dataForm.fileName = data.name;
   dataForm.ext = data.ext;
-}
+};
 
 const unUpload = () => {
-  dataForm.fileName = '';
-  dataForm.ext = '';
-}
+  dataForm.fileName = "";
+  dataForm.ext = "";
+};
 
 // 获取数据
 const getData = async () => {
@@ -277,7 +291,8 @@ const onSizeChange = (value) => {
   getData();
 };
 
-const onCurrentChange = () => {
+const onCurrentChange = (value) => {
+  pageNum.value = value;
   getData();
 };
 

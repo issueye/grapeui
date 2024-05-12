@@ -10,16 +10,23 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
+      <el-button type="primary" @click="onSelectClick">选择</el-button>
     </el-form-item>
   </el-form>
 
   <div class="table-box">
     <el-scrollbar :height="250">
       <div class="table-items">
-        <div v-for="(item, index) in tableData" :key="index" style="margin: 2px; padding: 2px" :style="{ border: imgVars[index] }" @click="onImgClick(index)">
+        <div
+          v-for="(item, index) in tableData"
+          :key="index"
+          style="margin: 2px; padding: 2px"
+          :style="{ border: imgVars[index].color }"
+          @click="onImgClick(index)"
+        >
           <el-image
             style="width: 100px; height: 100px; margin: 2px"
-            :src="`/resources/${item.fileName}${item.ext}`"
+            :src="getPath(item.fileName, item.ext)"
             fit="cover"
           />
           <div>{{ item.title }}</div>
@@ -45,7 +52,9 @@
 <script setup>
 import { onMounted, reactive, ref } from "vue";
 import { apiResourceList } from "@/apis/page/resource";
+import { getImgPath } from "@/utils/utils";
 
+const emits = defineEmits(["onSelect"]);
 // 分页
 const pageNum = ref(1);
 const pageSize = ref(10);
@@ -65,9 +74,42 @@ onMounted(() => {
   getData();
 });
 
+const onQryClick = () => {
+  getData();
+};
+
+const onChange = () => {
+  getData();
+};
+
+const getPath = (name, ext) => {
+  console.log("getPath", name, ext);
+  return getImgPath(name, ext);
+};
+
+const onSelectClick = () => {
+  for (let key in imgVars.value) {
+    let item = imgVars.value[key];
+
+    if (item.click) {
+      emits("onSelect", item.name);
+      return;
+    }
+  }
+};
+
 const onImgClick = (index) => {
-  imgVars.value[index] = '1px solid #397AFD'
-}
+  for (let key in imgVars.value) {
+    let item = imgVars.value[key];
+
+    console.log("item", item);
+    item.color = "1px solid #D9D9D9";
+    item.click = false;
+  }
+
+  imgVars.value[index].click = true;
+  imgVars.value[index].color = "1px solid #397AFD";
+};
 
 const getData = async () => {
   let sendData = {
@@ -78,15 +120,29 @@ const getData = async () => {
 
   let res = await apiResourceList(sendData);
   if (res.code === 200) {
-    const data = [ ...res.data ];
+    const data = [...res.data];
 
-    for (index = 0; index < data.length; index++) {
-      imgVars.value[index] = '1px solid #D9D9D9'
+    for (let index = 0; index < data.length; index++) {
+      imgVars.value[index] = {
+        color: "1px solid #D9D9D9",
+        click: false,
+        name: `${data[index].fileName}${data[index].ext}`,
+      };
     }
 
     tableData.value = res.data;
     total.value = res.pageInfo.total;
   }
+};
+
+const onSizeChange = (value) => {
+  pageSize.value = value;
+  getData();
+};
+
+const onCurrentChange = (value) => {
+  pageNum.value = value;
+  getData();
 };
 </script>
 

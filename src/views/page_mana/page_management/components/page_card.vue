@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <el-image :src="data.imgUrl || defaultImg" :fit="fit" />
+    <el-image :src="data.imgUrl || defaultImg" fit="cover" />
     <div class="body">
       <div class="title">
         {{ data.title ? data.title : "这是一条测试内容" }}
