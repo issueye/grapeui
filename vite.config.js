@@ -26,6 +26,14 @@ export default defineConfig({
         target: 'http://127.0.0.1:10065',
         rewrite: (path) => path.replace(/^\/resources/, "/resources")
       },
-    }
+      '/page/api': {
+        target: 'http://127.0.0.1:10065',
+        rewrite: (path) => path.replace(/^\/api/, "/api")
+      },
+      '/api': {
+        target: 'http://127.0.0.1:10065',
+        rewrite: (path) => path.replace(/^\/api/, "/api")
+      },
+    },
   }
 })

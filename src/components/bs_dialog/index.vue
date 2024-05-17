@@ -11,7 +11,7 @@
     <div class="dialog-body-box">
       <slot name="body"> </slot>
     </div>
-    <div class="dialog-footer-box">
+    <div class="dialog-footer-box" v-if="props.showFooter">
       <slot name="footer">
         <el-button type="primary" @click="submitForm">确定</el-button>
         <el-button @click="onClose">关闭</el-button>
@@ -29,6 +29,10 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false,
+  },
+  showFooter: {
+    type: Boolean,
+    default: true,
   },
   width: 500,
 });

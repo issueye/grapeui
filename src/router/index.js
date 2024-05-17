@@ -9,6 +9,7 @@ import Dashboard from '@/views/dashboard/index.vue';
 import TargetManagement from '@/views/page_mana/target_management/index.vue';
 import ResourceManagement from '@/views/page_mana/resource_management/index.vue';
 import PageManagement from '@/views/page_mana/page_management/index.vue';
+import { createWebHashHistory } from 'vue-router';
 
 const routes = [
     {
@@ -28,7 +29,6 @@ const routes = [
             {
                 path: 'page',
                 name: 'Page',
-                redirect: '/page/page_management',
                 children: [
                     {
                         path: 'page_management',
@@ -50,7 +50,6 @@ const routes = [
             {
                 path: 'system',
                 name: 'System',
-                redirect: '/system/user_management',
                 children: [
                     {
                         path: 'user_management',
@@ -82,7 +81,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes
 })
 
