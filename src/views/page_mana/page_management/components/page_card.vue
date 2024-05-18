@@ -1,24 +1,27 @@
 <template>
   <el-card>
-    <el-image :src="data.imgUrl || defaultImg" fit="cover" />
-    <div class="body">
-      <div class="title">
-        {{ data.title ? data.title : "这是一条测试内容" }}
+    <div style="display: flex; flex-direction: column; height: 100%">
+      <el-image :src="data.imgUrl || defaultImg" fit="cover" />
+      <div class="body">
+        <div class="title">
+          {{ data.title ? data.title : "这是一条测试内容" }}
+        </div>
+        <div class="version">
+          版本：{{ data.version ? data.version : "无" }}
+        </div>
       </div>
-      <div class="version">
-        版本：{{ data.version ? data.version : "v1.0.0.beta" }}
+      <div class="actions">
+        <el-button color="#2376b7" size="small" :icon="List" @click="onEditClick" />
+        <el-button color="#626aef" size="small" :icon="Edit" @click="onEditClick" />
+        <el-button color="#ee3f4d" size="small" :icon="Delete" @click="onDeleteClick" />
       </div>
-    </div>
-    <div class="actions">
-      <el-button color="#626aef" :icon="Edit" @click="onEditClick" />
-      <el-button type="primary" :icon="Delete" @click="onDeleteClick" />
     </div>
   </el-card>
 </template>
 
 <script setup>
-import { Delete, Edit, Search, Share, Upload } from "@element-plus/icons-vue";
-import { ref, toRefs, version } from "vue";
+import { Delete, Edit, List } from "@element-plus/icons-vue";
+import { toRefs } from "vue";
 import defaultImg from "@/assets/images/default.png";
 
 const props = defineProps({
@@ -28,7 +31,6 @@ const props = defineProps({
     name: "",
     version: "",
     portId: "",
-    fileName: "",
     mark: "",
     imlUrl: "static/www/images/page-00003.jpg",
   },
@@ -58,7 +60,7 @@ const onDeleteClick = () => {
 .el-card {
   margin: 10px;
   width: 260px;
-  height: 280px;
+  height: 262px;
 
   .el-image {
     width: 100%;
@@ -67,7 +69,6 @@ const onDeleteClick = () => {
   }
 
   .body {
-    height: 52px;
     .title {
       margin: 10px 0;
       font-size: 16px;

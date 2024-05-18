@@ -5,7 +5,7 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
-      <el-button type="primary" @click="onAddClick">添加</el-button>
+      <!-- <el-button type="primary" @click="onAddClick">添加</el-button> -->
       <el-button type="primary" @click="onUploadClick">上传</el-button>
     </el-form-item>
   </el-form>
@@ -13,7 +13,7 @@
   <div class="table-box">
     <el-scrollbar :height="tableHeight">
       <div class="table-items">
-        <PageCard :data="dataForm" v-for="(data, index) in 10" :key="index" @edit="onEditClick"
+        <PageCard :data="item" v-for="(item, index) in tableData" :key="index" @edit="onEditClick"
           @delete="onDeleteClick" />
       </div>
     </el-scrollbar>
@@ -61,7 +61,7 @@
               " fit="cover" />
             <el-popover placement="right" :visible="resourceVisible" :width="700" trigger="click">
               <template #reference>
-                <el-button style="margin-left: 10px" type="primary" @click="onQryClick">选择资源</el-button>
+                <el-button style="margin-left: 10px" type="primary" @click="onSelectResourceClick">选择资源</el-button>
               </template>
               <BsResources @onSelect="onSelect" />
             </el-popover>
@@ -77,7 +77,8 @@
       <div style="display: flex; justify-content: flex-end; align-items: flex-end;">
         <div style="width: 100%; margin-right: 20px;">
           <div style="margin: 10px 0 10px 0"> {{ uploadMessage }} </div>
-          <el-progress :percentage="progress" :stroke-width="32" striped />
+          <el-progress :percentage="progress" :stroke-width="32" striped striped-flow :duration="30"
+            :status="progressStatus" />
         </div>
         <el-upload :http-request="onUpload" action="" multiple :show-file-list="false" accept=".zip">
           <template #trigger>
@@ -105,7 +106,7 @@ import {
   apiPageDelete,
 } from "@/apis/page/page";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { apiResourceUpload, apiResourceUnUpload } from "@/apis/page/resource";
+import { apiResourceUpload } from "@/apis/page/resource";
 
 const nameTitle = "页面";
 // 标题
@@ -122,6 +123,7 @@ const dataFormRef = ref();
 const uploadMessage = ref('上传文件');
 // progress
 const progress = ref(0);
+const progressStatus = ref('');
 // 表单验证规则
 const rules = reactive({
   title: [{ required: true, message: "请输入页面标题", trigger: "blur" }],
@@ -167,6 +169,13 @@ const listenSSE = (id) => {
 
     uploadMessage.value = msgData.message;
     progress.value = msgData.progress;
+    if (msgData.code === 0) {
+      progressStatus.value = 'exception'
+    }
+
+    if (progress.value === 100) {
+      progressStatus.value = 'success'
+    }
   })
 
   sse.value.onerror = (e) => {
@@ -268,6 +277,10 @@ const onUploadClick = () => {
 const onUploadClose = () => {
   uploadVisible.value = false;
 
+  uploadMessage.value = '';
+  progress.value = '';
+  progressStatus.value = '';
+
   // 关闭 sse 连接
   if (sse.value) {
     sse.value.close()
@@ -298,9 +311,12 @@ const onChange = () => {
 };
 
 const onQryClick = () => {
-  // getData();
-  resourceVisible.value = true;
+  getData();
 };
+
+const onSelectResourceClick = () => {
+  resourceVisible.value = true;
+}
 
 const onEditClick = (value) => {
   operationType.value = 1;
