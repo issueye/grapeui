@@ -285,6 +285,8 @@ const onUploadClose = () => {
   if (sse.value) {
     sse.value.close()
   }
+
+  getData();
 };
 const onUploadSave = () => { };
 const onUploadOpen = () => {
