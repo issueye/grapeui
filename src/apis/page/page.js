@@ -14,6 +14,18 @@ export const apiPageList = (params) => {
 }
 
 /**
+ * 获取页面版本列表
+ * @param {*} params 
+ * @returns 
+ */
+export const apiPageVersionList = (productCode) => {
+    return request({
+        url: `api/v1/page/version/${productCode}`,
+        method: 'get',
+    })
+}
+
+/**
  * 创建页面
  * @param {*} data 
  * @returns 
@@ -33,7 +45,7 @@ export const apiPageCreate = (data) => {
  */
 export const apiPageModify = (data) => {
     return request({
-        url: `api/v1/page/${data.id}`,
+        url: `api/v1/page`,
         method: 'put',
         data: data,
     })

@@ -10,10 +10,10 @@
       <el-col :span="17">
         <div class="right-box">
           <el-tabs v-model="activeName" type="card" @tab-click="onTabsClick">
-            <el-tab-pane label="页面" name="page">
+            <el-tab-pane label="页面管理" name="page">
               <PageCommon />
             </el-tab-pane>
-            <el-tab-pane label="反向代理" name="proxy">
+            <el-tab-pane label="转发管理" name="proxy">
               <ProxyRules />
             </el-tab-pane>
           </el-tabs>

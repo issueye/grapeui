@@ -33,7 +33,7 @@ export const apiRuleCreate = (data) => {
  */
 export const apiRuleModify = (data) => {
     return request({
-        url: `api/v1/rule/${data.id}`,
+        url: `api/v1/rule`,
         method: 'put',
         data: data,
     })

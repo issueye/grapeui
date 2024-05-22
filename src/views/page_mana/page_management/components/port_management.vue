@@ -19,11 +19,12 @@
       round
       border
       :data="tableData"
-      size="small"
+      size="mini"
       :height="tableHeight"
       stripe
       auto-resize
       :row-config="{ isCurrent: true, isHover: true }"
+      @cell-click="onRowClick"
     >
       <vxe-column field="port" title="端口号" width="100" align="left" />
       <vxe-column field="mark" title="备注" show-overflow />
@@ -136,6 +137,11 @@ import {
   apiPortReload,
 } from "@/apis/page/port";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { usePageStore } from '@/store/page';
+import { storeToRefs } from "pinia";
+
+const pageStore = usePageStore();
+const { indexPort } = storeToRefs(pageStore)
 
 const nameTitle = "端口号";
 // 标题
@@ -215,6 +221,11 @@ const onAddClick = () => {
   resetForm();
   visible.value = true;
 };
+
+const onRowClick = ({row, column}) => {
+  console.log('row', row, 'column', column);
+  pageStore.setIndexPort(row);
+}
 
 const onSizeChange = (value) => {
   pageSize.value = value;

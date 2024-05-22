@@ -11,6 +11,7 @@
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
       <el-button type="primary" @click="onSelectClick">选择</el-button>
+      <el-button type="primary" @click="onCancelClick">取消</el-button>
     </el-form-item>
   </el-form>
 
@@ -54,7 +55,7 @@ import { onMounted, reactive, ref } from "vue";
 import { apiResourceList } from "@/apis/page/resource";
 import { getImgPath } from "@/utils/utils";
 
-const emits = defineEmits(["onSelect"]);
+const emits = defineEmits(["onSelect", "onCancel"]);
 // 分页
 const pageNum = ref(1);
 const pageSize = ref(10);
@@ -97,6 +98,11 @@ const onSelectClick = () => {
     }
   }
 };
+
+const onCancelClick = () => {
+  emits("onCancel")
+}
+
 
 const onImgClick = (index) => {
   for (let key in imgVars.value) {

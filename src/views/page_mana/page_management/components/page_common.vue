@@ -5,7 +5,6 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
-      <!-- <el-button type="primary" @click="onAddClick">添加</el-button> -->
       <el-button type="primary" @click="onUploadClick">上传</el-button>
     </el-form-item>
   </el-form>
@@ -24,7 +23,7 @@
       @current-change="onCurrentChange" />
   </div>
 
-  <BsDialog :title="title" :width="700" :visible="visible" @close="onClose" @save="onSave">
+  <BsDialog :title="title" :width="700" :visible="visible" @close="onClose" @save="onSave" @open="onOpen">
     <template #body>
       <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
         <el-row :gutter="20">
@@ -35,7 +34,9 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="版本" prop="version">
-              <el-input v-model="dataForm.version" placeholder="请输入版本" :disabled="operationType === 1" clearable />
+              <el-select v-model="dataForm.version" placeholder="请输入版本" clearable>
+                <el-option v-for="(item, index) in pageVersionData" :key="index" :value="item.version" :label="item.version" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -63,7 +64,7 @@
               <template #reference>
                 <el-button style="margin-left: 10px" type="primary" @click="onSelectResourceClick">选择资源</el-button>
               </template>
-              <BsResources @onSelect="onSelect" />
+              <BsResources @onSelect="onSelect" @onCancel="resourceVisible = false" />
             </el-popover>
           </div>
         </el-form-item>
@@ -99,14 +100,18 @@ import defaultImage from "@/assets/images/default.png";
 import { nanoid } from 'nanoid'
 
 import {
-  apiPageList,
   apiPageCreate,
   apiPageModify,
-  apiPageModifyState,
   apiPageDelete,
+  apiPageVersionList,
 } from "@/apis/page/page";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { apiResourceUpload } from "@/apis/page/resource";
+import { usePageStore } from '@/store/page';
+import { storeToRefs } from "pinia";
+
+const pageStore = usePageStore();
+const { indexPort, pageTableData: tableData, pageTotal: total } = storeToRefs(pageStore);
 
 const nameTitle = "页面";
 // 标题
@@ -133,9 +138,10 @@ const rules = reactive({
 // 分页
 const pageNum = ref(1);
 const pageSize = ref(10);
-const total = ref(0);
 
 const resourceVisible = ref(false);
+
+const pageVersionData = ref([]);
 
 // 查询表单
 const form = reactive({
@@ -184,6 +190,13 @@ const listenSSE = (id) => {
   }
 }
 
+const getPageVersionData = async (productCode) => {
+  const res = await apiPageVersionList(productCode);
+  if (res.code === 200) {
+    pageVersionData.value = res.data;
+  }
+}
+
 const onUpload = async (fileObject) => {
   const id = nanoid()
   listenSSE(id)
@@ -199,23 +212,15 @@ const onUpload = async (fileObject) => {
   dataForm.ext = data.ext;
 };
 
-const fileList = ref([]);
-
 const getPath = (name) => {
   const info = name.split(".");
   return getImgPath(info[0], info[1]);
 };
 
 const onSelect = (value) => {
-  console.log("value", value);
-
   resourceVisible.value = false;
-
   dataForm.thumbnail = value;
 };
-
-//  表格数据
-const tableData = ref([]);
 
 // 组件加载完成
 onMounted(() => {
@@ -230,13 +235,10 @@ const getData = async () => {
     condition: form.condition,
     pageNum: pageNum.value,
     pageSize: pageSize.value,
+    portId: indexPort.id,
   };
 
-  let res = await apiPageList(sendData);
-  if (res.code === 200) {
-    tableData.value = res.data;
-    total.value = res.pageInfo.total;
-  }
+  await pageStore.getPageData(sendData);
 };
 
 // 重置表单数据
@@ -247,6 +249,7 @@ const resetForm = () => {
   dataForm.version = "";
   dataForm.portId = "";
   dataForm.fileName = "";
+  dataForm.thumbnail = "";
   dataForm.mark = "";
 };
 
@@ -257,18 +260,10 @@ const setForm = (value) => {
   dataForm.name = value.name;
   dataForm.version = value.version;
   dataForm.portId = value.portId;
+  dataForm.productCode = value.productCode;
   dataForm.fileName = value.fileName;
+  dataForm.thumbnail = value.fileName;
   dataForm.mark = value.mark;
-};
-
-/**
- * 添加事件
- */
-const onAddClick = () => {
-  operationType.value = 0;
-  title.value = `[添加]${nameTitle}`;
-  resetForm();
-  visible.value = true;
 };
 
 const onUploadClick = () => {
@@ -347,6 +342,10 @@ const onDeleteClick = (value) => {
       ElMessage.info("取消删除");
     });
 };
+
+const onOpen = () => {
+  getPageVersionData(dataForm.productCode);
+}
 
 const onSave = () => {
   if (!dataFormRef.value) return;

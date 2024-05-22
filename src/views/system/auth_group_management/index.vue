@@ -25,7 +25,7 @@
           round
           border
           :data="tableData"
-          size="small"
+          size="mini"
           height="100%"
           stripe
           auto-resize

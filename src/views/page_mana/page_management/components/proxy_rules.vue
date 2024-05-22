@@ -1,12 +1,7 @@
 <template>
   <el-form inline>
     <el-form-item label="检索">
-      <el-input
-        v-model="form.condition"
-        placeholder="请输入检索内容"
-        clearable
-        @change="onChange"
-      />
+      <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange" />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
@@ -15,113 +10,108 @@
   </el-form>
 
   <div class="table-box" ref="element">
-    <vxe-table
-      border="none"
-      :data="tableData"
-      size="small"
-      :height="tableHeight"
-      stripe
-      auto-resize
-      :row-config="{ isCurrent: true, isHover: true }"
-    >
-      <vxe-column field="path" title="匹配路由" width="150" align="left" />
-      <vxe-column
-        field="targetPath"
-        title="目标路由"
-        width="150"
-        align="left"
-      />
-      <vxe-column field="method" title="请求方法" width="150" align="left" />
-      <vxe-column field="target" title="目标地址" width="150" align="left" />
-      <vxe-column field="matchType" title="匹配模式" width="150" align="left" />
-      <vxe-column field="mark" title="备注" show-overflow min-width="150" />
-      <vxe-column
-        field="state"
-        title="状态"
-        width="70"
-        align="center"
-        fixed="right"
-      >
+    <vxe-table round border :data="tableData" size="mini" :height="tableHeight" stripe auto-resize
+      :row-config="{ isCurrent: true, isHover: true }">
+      <vxe-column field="name" title="匹配路由" min-width="150" align="left" show-overflow />
+      <vxe-column field="targetRoute" title="目标路由" min-width="150" align="left" show-overflow />
+      <vxe-column field="method" title="请求方法" width="80" align="left" show-overflow />
+      <vxe-column field="target" title="目标地址" width="150" align="left" show-overflow />
+      <vxe-column field="matchType" title="匹配模式" width="80" align="left" show-overflow>
         <template v-slot="{ row }">
-          <el-tag effect="plain" :type="row.state ? 'success' : 'danger'">
-            {{ row.state ? "启用" : "停用" }}
-          </el-tag>
-        </template>
+          <el-tag effect="plain" :type="row.matchType == 1 ? 'primary' : 'success'"> {{ row.matchType == 1 ? 'GIN': 'MUX' }}</el-tag>
+        </template>  
       </vxe-column>
+      <vxe-column field="mark" title="备注" min-width="150" show-overflow />
       <vxe-column title="操作" width="140" align="center" fixed="right">
         <template v-slot="{ row }">
-          <el-button type="primary" link size="small" @click="onEditClick(row)"
-            >编辑</el-button
-          >
-          <el-button type="danger" link size="small" @click="onDeleteClick(row)"
-            >删除</el-button
-          >
+          <el-button type="primary" link size="small" @click="onEditClick(row)">编辑</el-button>
+          <el-button type="danger" link size="small" @click="onDeleteClick(row)">删除</el-button>
         </template>
       </vxe-column>
     </vxe-table>
   </div>
   <div style="margin-top: 10px">
-    <el-pagination
-      small
-      background
-      :current-page="pageNum"
-      :page-size="pageSize"
-      :page-sizes="[5, 10, 20]"
-      :total="total"
-      layout="total, sizes, prev, pager, next"
-      @size-change="onSizeChange"
-      @current-change="onCurrentChange"
-    />
+    <el-pagination small background :current-page="pageNum" :page-size="pageSize" :page-sizes="[5, 10, 20]"
+      :total="total" layout="total, sizes, prev, pager, next" @size-change="onSizeChange"
+      @current-change="onCurrentChange" />
   </div>
 
-  <BsDialog
-    :title="title"
-    :width="500"
-    :visible="visible"
-    @close="onClose"
-    @save="onSave"
-  >
+  <BsDialog :title="title" :width="700" :visible.sync="visible" @close="onClose" @save="onSave" @open="onOpen">
     <template #body>
-      <el-form
-        label-width="auto"
-        :model="dataForm"
-        :rules="rules"
-        ref="dataFormRef"
-      >
-        <el-form-item label="端口号" prop="port">
-          <el-input-number
-            v-model="dataForm.port"
-            placeholder="请输入端口号"
-            clearable
-            style="width: auto"
-            :disabled="operationType == 1"
-          />
-        </el-form-item>
+      <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="匹配路由" prop="name">
+              <el-input v-model="dataForm.name" placeholder="请输入匹配路由" clearable />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="目标路由" prop="targetRoute">
+              <el-input v-model="dataForm.targetRoute" placeholder="请输入目标路由" clearable />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="目标地址" prop="target">
+              <!-- <el-input v-model="dataForm.target" placeholder="请输入目标地址" clearable /> -->
+              <el-select v-model="dataForm.targetId" placeholder="请选择目标地址" clearable>
+                <el-option v-for="(item, index) in targetTableData" :key="index" :label="item.mark" :value="item.id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="请求方法" prop="method">
+              <el-select v-model="dataForm.method" placeholder="请选择请求方法" clearable>
+                <el-option label="GET" value="GET" />
+                <el-option label="POST" value="POST" />
+                <el-option label="PUT" value="PUT" />
+                <el-option label="PATCH" value="PATCH" />
+                <el-option label="DELETE" value="DELETE" />
+                <el-option label="Any" value="Any" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="匹配模式" prop="matchType">
+              <el-select v-model="dataForm.matchType" placeholder="请输入匹配模式" clearable>
+                <el-option label="GIN" :value="1" />
+                <el-option label="MUX" :value="2" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-form-item label="备注">
-          <el-input
-            v-model="dataForm.mark"
-            placeholder="请输入备注"
-            :disabled="dataForm.sys === 1 && operationType === 1"
-            type="textarea"
-            :row="2"
-            clearable
-          />
+          <el-input v-model="dataForm.mark" placeholder="请输入备注" :disabled="dataForm.sys === 1 && operationType === 1"
+            type="textarea" :row="2" clearable />
         </el-form-item>
       </el-form>
     </template>
   </BsDialog>
 </template>
-        
-        <script setup>
+
+<script setup>
 import { onMounted, reactive, ref } from "vue";
+import { usePageStore } from '@/store/page';
+import { storeToRefs } from "pinia";
+
+const pageStore = usePageStore();
+const { indexPort, ruleTableData: tableData, ruleTotal: total } = storeToRefs(pageStore)
 
 import {
-  apiRuleList,
   apiRuleCreate,
   apiRuleModify,
-  apiRuleModifyState,
   apiRuleDelete,
 } from "@/apis/page/rule";
+import {
+  apiTargetList
+} from '@/apis/page/target';
+
 import { ElMessage, ElMessageBox } from "element-plus";
 
 const nameTitle = "反向代理规则";
@@ -137,12 +127,15 @@ const operationType = ref(0);
 const dataFormRef = ref();
 // 表单验证规则
 const rules = reactive({
-  port: [{ required: true, message: "请输入匹配路由", trigger: "blur" }],
+  name: [{ required: true, message: "请输入匹配路由", trigger: "blur" }],
+  method: [{ required: true, message: "请选择请求方法", trigger: "blur" }],
+  targetRoute: [{ required: true, message: "请输入目标路由", trigger: "blur" }],
+  targetId: [{ required: true, message: "请选择目标地址", trigger: "blur" }],
+  matchType: [{ required: true, message: "请选择匹配模式", trigger: "blur" }],
 });
 // 分页
 const pageNum = ref(1);
 const pageSize = ref(10);
-const total = ref(0);
 
 // 查询表单
 const form = reactive({
@@ -151,19 +144,34 @@ const form = reactive({
 
 // 弹窗表单
 const dataForm = reactive({
-  port: 0,
-  mark: "",
+  id: '',
+  portId: '',
+  name: '',
+  targetRoute: '',
+  method: '',
+  targetId: '',
+  matchType: '',
+  mark: '',
 });
 
 //  表格数据
-const tableData = ref([]);
+const targetTableData = ref([]);
 
 // 组件加载完成
 onMounted(() => {
   getData();
-
+  getTargetData();
   tableHeight.value = element.value.offsetHeight;
 });
+
+const getTargetData = async () => {
+  const res = await apiTargetList();
+  console.log('getTargetData -> data', res);
+  if (res.code === 200) {
+    targetTableData.value = res.data;
+    console.log('targetTableData', targetTableData.value);
+  }
+}
 
 // 获取数据
 const getData = async () => {
@@ -173,24 +181,33 @@ const getData = async () => {
     pageSize: pageSize.value,
   };
 
-  let res = await apiRuleList(sendData);
-  if (res.code === 200) {
-    tableData.value = res.data;
-    total.value = res.pageInfo.total;
-  }
+  pageStore.getRuleData(sendData);
 };
 
 // 重置表单数据
 const resetForm = () => {
-  dataForm.port = 0;
+  dataForm.id = "";
+  dataForm.portId = "";
+  dataForm.name = "";
+  dataForm.targetRoute = "";
+  dataForm.method = "";
+  dataForm.targetId = "";
+  dataForm.matchType = "";
   dataForm.mark = "";
 };
 
 // 赋值表单数据
 const setForm = (value) => {
   console.log("value", value);
-  dataForm.port = value.port;
-  dataForm.mark = value.mark;
+  
+  dataForm.id =  value.id;
+  dataForm.portId =  value.portId;
+  dataForm.name =  value.name;
+  dataForm.targetRoute =  value.targetRoute;
+  dataForm.method =  value.method;
+  dataForm.targetId =  value.targetId;
+  dataForm.matchType =  value.matchType;
+  dataForm.mark =  value.mark;
 };
 
 /**
@@ -206,58 +223,6 @@ const onAddClick = () => {
 const onSizeChange = (value) => {
   pageSize.value = value;
   getData();
-};
-
-const beforeHandleCommand = (command, row) => {
-  return {
-    command: command,
-    row: row,
-  };
-};
-
-const onCommand = async (command) => {
-  switch (command.command) {
-    case "state": {
-      const res = await apiRuleModifyState(command.row.id);
-      if (res.code === 200) {
-        ElMessage.success(res.message);
-        getData();
-      } else {
-        ElMessage.error(res.message);
-      }
-      break;
-    }
-    case "start": {
-      const res = await apiRuleStart(command.row.id);
-      if (res.code === 200) {
-        ElMessage.success(res.message);
-        getData();
-      } else {
-        ElMessage.error(res.message);
-      }
-      break;
-    }
-    case "stop": {
-      const res = await apiRuleStop(command.row.id);
-      if (res.code === 200) {
-        ElMessage.success(res.message);
-        getData();
-      } else {
-        ElMessage.error(res.message);
-      }
-      break;
-    }
-    case "restart": {
-      const res = await apiRuleReload(command.row.id);
-      if (res.code === 200) {
-        ElMessage.success(res.message);
-        getData();
-      } else {
-        ElMessage.error(res.message);
-      }
-      break;
-    }
-  }
 };
 
 const onCurrentChange = () => {
@@ -277,17 +242,6 @@ const onEditClick = (value) => {
   title.value = `[编辑]${nameTitle}`;
   setForm(value);
   visible.value = true;
-};
-
-const onEditStateClick = async (value) => {
-  const res = await apiRuleModifyState(value.id);
-  if (res.code !== 200) {
-    ElMessage.error(res.message);
-    return;
-  }
-
-  ElMessage.success(res.message);
-  getData();
 };
 
 const onDeleteClick = (value) => {
@@ -317,6 +271,7 @@ const onSave = () => {
     if (valid) {
       switch (operationType.value) {
         case 0: {
+          dataForm.portId = indexPort.value.id;
           const res = await apiRuleCreate(dataForm);
           if (res.code !== 200) {
             ElMessage.error(res.message);
@@ -354,9 +309,14 @@ const onClose = () => {
   if (!dataFormRef.value) return;
   dataFormRef.value.resetFields();
 };
+
+const onOpen = () => {
+  getTargetData();
+}
+
 </script>
-        
-  <style lang="scss" scoped>
+
+<style lang="scss" scoped>
 .table-box {
   height: calc(100% - 85px);
 
@@ -376,4 +336,3 @@ const onClose = () => {
   outline: none;
 }
 </style>
-        
