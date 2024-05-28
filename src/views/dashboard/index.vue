@@ -50,7 +50,7 @@
               width: 100%;
             "
           >
-            <div>端口号</div>
+            <div>系统</div>
             <el-icon><Tools /></el-icon>
           </div>
         </template>
@@ -70,7 +70,7 @@
               width: 100%;
             "
           >
-            <div>端口号</div>
+            <div>规则</div>
             <el-icon><Tools /></el-icon>
           </div>
         </template>
@@ -90,7 +90,7 @@
               width: 100%;
             "
           >
-            <div>端口号</div>
+            <div>转发地址</div>
             <el-icon><Tools /></el-icon>
           </div>
         </template>

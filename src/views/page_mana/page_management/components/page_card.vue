@@ -1,12 +1,15 @@
 <template>
   <el-card style="transform: rotate(360deg)">
     <el-icon
-      style="position: fixed; top: 5px; right: 5px; z-index: 10; color: #fff;"
+      style="position: fixed; top: 5px; right: 5px; z-index: 10; color: #fff"
       @click="onDeleteClick"
       ><Close
     /></el-icon>
     <div style="display: flex; flex-direction: column; height: 100%">
-      <el-image :src="data.thumbnail ? getPath(data.thumbnail) : defaultImg" fit="cover" />
+      <el-image
+        :src="data.thumbnail ? getPath(data.thumbnail) : defaultImg"
+        fit="cover"
+      />
       <div class="body">
         <div class="title">
           {{ data.title ? data.title : "这是一条测试内容" }}
@@ -42,12 +45,17 @@
 </template>
 
 <script setup>
-import { Edit, VideoPlay, ChromeFilled, VideoPause } from "@element-plus/icons-vue";
+import {
+  Edit,
+  VideoPlay,
+  ChromeFilled,
+  VideoPause,
+} from "@element-plus/icons-vue";
 import { toRefs } from "vue";
 import defaultImg from "@/assets/images/default.png";
-import { usePageStore } from '@/store/page';
+import { usePageStore } from "@/store/page";
 import { storeToRefs } from "pinia";
-import { getImgPath } from '@/utils/utils';
+import { getImgPath } from "@/utils/utils";
 
 const pageStore = usePageStore();
 const { indexPort } = storeToRefs(pageStore);
@@ -70,10 +78,10 @@ console.log("data", data);
 const emits = defineEmits(["edit", "delete"]);
 
 const getPath = (path) => {
-  const fileData = path.split('.')
-  const t = getImgPath(fileData[0], fileData[1])
+  const fileData = path.split(".");
+  const t = getImgPath(fileData[0], fileData[1]);
   return t;
-}
+};
 
 // 修改信息
 const onEditClick = () => {
@@ -86,11 +94,14 @@ const onDeleteClick = () => {
 };
 
 const onJumpUrlClick = () => {
-  let ip = window.location.host.split(":")[0]
-  console.log('indexPort', indexPort.value);
-  let url = `http://${ip}:${indexPort.value.port}/${props.data.name}/${props.data.version}/` 
+  let ip = window.location.host.split(":")[0];
+  console.log("indexPort", indexPort.value);
+  let url = `http://${ip}:${indexPort.value.port}/${props.data.name}/`;
+  if (props.data.useVersionRoute === 1) {
+    url = `http://${ip}:${indexPort.value.port}/${props.data.name}/${props.data.version}/`;
+  }
   window.open(url, "_blank");
-}
+};
 
 // 修改状态
 const onStateClick = () => {};

@@ -1,7 +1,12 @@
 <template>
   <el-form inline>
     <el-form-item label="检索">
-      <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange" />
+      <el-input
+        v-model="form.condition"
+        placeholder="请输入检索内容"
+        clearable
+        @change="onChange"
+      />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
@@ -12,59 +17,136 @@
   <div class="table-box">
     <el-scrollbar :height="tableHeight">
       <div class="table-items">
-        <PageCard :data="item" v-for="(item, index) in tableData" :key="index" @edit="onEditClick"
-          @delete="onDeleteClick" />
+        <PageCard
+          :data="item"
+          v-for="(item, index) in tableData"
+          :key="index"
+          @edit="onEditClick"
+          @delete="onDeleteClick"
+        />
       </div>
     </el-scrollbar>
   </div>
   <div style="margin-top: 10px">
-    <el-pagination small background :current-page="pageNum" :page-size="pageSize" :page-sizes="[5, 10, 20]"
-      :total="total" layout="total, sizes, prev, pager, next" @size-change="onSizeChange"
-      @current-change="onCurrentChange" />
+    <el-pagination
+      small
+      background
+      :current-page="pageNum"
+      :page-size="pageSize"
+      :page-sizes="[5, 10, 20]"
+      :total="total"
+      layout="total, sizes, prev, pager, next"
+      @size-change="onSizeChange"
+      @current-change="onCurrentChange"
+    />
   </div>
 
-  <BsDialog :title="title" :width="700" :visible="visible" @close="onClose" @save="onSave" @open="onOpen">
+  <BsDialog
+    :title="title"
+    :width="700"
+    :visible="visible"
+    @close="onClose"
+    @save="onSave"
+    @open="onOpen"
+  >
     <template #body>
-      <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
+      <el-form
+        label-width="auto"
+        :model="dataForm"
+        :rules="rules"
+        ref="dataFormRef"
+      >
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="标题" prop="title">
-              <el-input v-model="dataForm.title" placeholder="请输入页面标题" clearable />
+              <el-input
+                v-model="dataForm.title"
+                placeholder="请输入页面标题"
+                clearable
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="版本" prop="version">
-              <el-select v-model="dataForm.version" placeholder="请输入版本" clearable>
-                <el-option v-for="(item, index) in pageVersionData" :key="index" :value="item.version" :label="item.version" />
+              <el-select
+                v-model="dataForm.version"
+                placeholder="请输入版本"
+                clearable
+              >
+                <el-option
+                  v-for="(item, index) in pageVersionData"
+                  :key="index"
+                  :value="item.version"
+                  :label="item.version"
+                />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row :gutter="20">
-          <el-col>
+          <el-col :span="12">
             <el-form-item label="名称" prop="name">
               <div class="item">
-                <el-input v-model="dataForm.name" placeholder="请输入页面名称" clearable />
+                <el-input
+                  v-model="dataForm.name"
+                  placeholder="请输入页面名称"
+                  clearable
+                />
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="12"> </el-col>
+          <el-col :span="12">
+            <el-form-item label="版本路由" prop="useVersionRoute">
+              <el-switch
+                v-model="dataForm.useVersionRoute"
+                inline-prompt
+                active-text="启用"
+                inactive-text="停用"
+                :active-value="1"
+                :inactive-value="0"
+              />
+            </el-form-item>
+          </el-col>
         </el-row>
 
         <el-form-item label="备注">
-          <el-input v-model="dataForm.mark" placeholder="请输入备注" type="textarea" :row="5" clearable />
+          <el-input
+            v-model="dataForm.mark"
+            placeholder="请输入备注"
+            type="textarea"
+            :row="5"
+            clearable
+          />
         </el-form-item>
 
         <el-form-item label="简略图">
           <div :style="{ display: 'flex' }">
-            <el-image style="width: 100px; height: 100px" :src="dataForm.thumbnail ? getPath(dataForm.thumbnail) : defaultImage
-              " fit="cover" />
-            <el-popover placement="right" :visible="resourceVisible" :width="700" trigger="click">
+            <el-image
+              style="width: 100px; height: 100px"
+              :src="
+                dataForm.thumbnail ? getPath(dataForm.thumbnail) : defaultImage
+              "
+              fit="cover"
+            />
+            <el-popover
+              placement="right"
+              :visible="resourceVisible"
+              :width="700"
+              trigger="click"
+            >
               <template #reference>
-                <el-button style="margin-left: 10px" type="primary" @click="onSelectResourceClick">选择资源</el-button>
+                <el-button
+                  style="margin-left: 10px"
+                  type="primary"
+                  @click="onSelectResourceClick"
+                  >选择资源</el-button
+                >
               </template>
-              <BsResources @onSelect="onSelect" @onCancel="resourceVisible = false" />
+              <BsResources
+                @onSelect="onSelect"
+                @onCancel="resourceVisible = false"
+              />
             </el-popover>
           </div>
         </el-form-item>
@@ -72,22 +154,42 @@
     </template>
   </BsDialog>
 
-  <BsDialog title="页面上传" :width="500" :visible="uploadVisible" @close="onUploadClose" @save="onUploadSave"
-    :showFooter="false" @open="onUploadOpen">
+  <BsDialog
+    title="页面上传"
+    :width="500"
+    :visible="uploadVisible"
+    @close="onUploadClose"
+    @save="onUploadSave"
+    :showFooter="false"
+    @open="onUploadOpen"
+  >
     <template #body>
-      <div style="display: flex; justify-content: flex-end; align-items: flex-end;">
-        <div style="width: 100%; margin-right: 20px;">
-          <div style="margin: 10px 0 10px 0"> {{ uploadMessage }} </div>
-          <el-progress :percentage="progress" :stroke-width="32" striped striped-flow :duration="30"
-            :status="progressStatus" />
+      <div
+        style="display: flex; justify-content: flex-end; align-items: flex-end"
+      >
+        <div style="width: 100%; margin-right: 20px">
+          <div style="margin: 10px 0 10px 0">{{ uploadMessage }}</div>
+          <el-progress
+            :percentage="progress"
+            :stroke-width="32"
+            striped
+            striped-flow
+            :duration="30"
+            :status="progressStatus"
+          />
         </div>
-        <el-upload :http-request="onUpload" action="" multiple :show-file-list="false" accept=".zip">
+        <el-upload
+          :http-request="onUpload"
+          action=""
+          multiple
+          :show-file-list="false"
+          accept=".zip"
+        >
           <template #trigger>
             <el-button type="primary">上传</el-button>
           </template>
         </el-upload>
       </div>
-
     </template>
   </BsDialog>
 </template>
@@ -97,7 +199,7 @@ import { onMounted, reactive, ref } from "vue";
 import PageCard from "./page_card.vue";
 import { getImgPath } from "@/utils/utils";
 import defaultImage from "@/assets/images/default.png";
-import { nanoid } from 'nanoid'
+import { nanoid } from "nanoid";
 
 import {
   apiPageCreate,
@@ -107,11 +209,15 @@ import {
 } from "@/apis/page/page";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { apiResourceUpload } from "@/apis/page/resource";
-import { usePageStore } from '@/store/page';
+import { usePageStore } from "@/store/page";
 import { storeToRefs } from "pinia";
 
 const pageStore = usePageStore();
-const { indexPort, pageTableData: tableData, pageTotal: total } = storeToRefs(pageStore);
+const {
+  indexPort,
+  pageTableData: tableData,
+  pageTotal: total,
+} = storeToRefs(pageStore);
 
 const nameTitle = "页面";
 // 标题
@@ -125,10 +231,10 @@ const operationType = ref(0);
 // 数据表单
 const dataFormRef = ref();
 // 上传文件的提示
-const uploadMessage = ref('上传文件');
+const uploadMessage = ref("上传文件");
 // progress
 const progress = ref(0);
-const progressStatus = ref('');
+const progressStatus = ref("");
 // 表单验证规则
 const rules = reactive({
   title: [{ required: true, message: "请输入页面标题", trigger: "blur" }],
@@ -168,38 +274,38 @@ const listenSSE = (id) => {
   }
 
   sse.value = new EventSource("/api/v1/resource/upload/sse");
-  console.log('id', id);
+  console.log("id", id);
   sse.value.addEventListener(id, (msg) => {
-    console.log('msg', msg);
-    const msgData = JSON.parse(msg.data)
+    console.log("msg", msg);
+    const msgData = JSON.parse(msg.data);
 
     uploadMessage.value = msgData.message;
     progress.value = msgData.progress;
     if (msgData.code === 0) {
-      progressStatus.value = 'exception'
+      progressStatus.value = "exception";
     }
 
     if (progress.value === 100) {
-      progressStatus.value = 'success'
+      progressStatus.value = "success";
     }
-  })
+  });
 
   sse.value.onerror = (e) => {
-    console.log('e', e);
+    console.log("e", e);
     sse.value.close();
-  }
-}
+  };
+};
 
 const getPageVersionData = async (productCode) => {
   const res = await apiPageVersionList(productCode);
   if (res.code === 200) {
     pageVersionData.value = res.data;
   }
-}
+};
 
 const onUpload = async (fileObject) => {
-  const id = nanoid()
-  listenSSE(id)
+  const id = nanoid();
+  listenSSE(id);
 
   let fd = new FormData(); // 新建一个FormData()对象，这就相当于你新建了一个表单
   fd.append("file", fileObject.file);
@@ -247,7 +353,9 @@ const resetForm = () => {
   dataForm.title = "";
   dataForm.name = "";
   dataForm.version = "";
+  dataForm.useVersionRoute = 0;
   dataForm.portId = "";
+  dataForm.productCode = "";
   dataForm.fileName = "";
   dataForm.thumbnail = "";
   dataForm.mark = "";
@@ -259,6 +367,7 @@ const setForm = (value) => {
   dataForm.title = value.title;
   dataForm.name = value.name;
   dataForm.version = value.version;
+  dataForm.useVersionRoute = value.useVersionRoute;
   dataForm.portId = value.portId;
   dataForm.productCode = value.productCode;
   dataForm.fileName = value.fileName;
@@ -272,25 +381,25 @@ const onUploadClick = () => {
 const onUploadClose = () => {
   uploadVisible.value = false;
 
-  uploadMessage.value = '';
-  progress.value = '';
-  progressStatus.value = '';
+  uploadMessage.value = "";
+  progress.value = "";
+  progressStatus.value = "";
 
   // 关闭 sse 连接
   if (sse.value) {
-    sse.value.close()
+    sse.value.close();
   }
 
   getData();
 };
-const onUploadSave = () => { };
+const onUploadSave = () => {};
 const onUploadOpen = () => {
   // 关闭 sse 连接
   if (sse.value) {
-    sse.value.close()
+    sse.value.close();
   }
 
-  uploadMessage.value = '';
+  uploadMessage.value = "";
   progress.value = 0;
 };
 
@@ -313,7 +422,7 @@ const onQryClick = () => {
 
 const onSelectResourceClick = () => {
   resourceVisible.value = true;
-}
+};
 
 const onEditClick = (value) => {
   operationType.value = 1;
@@ -345,7 +454,7 @@ const onDeleteClick = (value) => {
 
 const onOpen = () => {
   getPageVersionData(dataForm.productCode);
-}
+};
 
 const onSave = () => {
   if (!dataFormRef.value) return;
@@ -386,6 +495,8 @@ const onSave = () => {
 
 const onClose = () => {
   visible.value = false;
+
+  resetForm();
 
   if (!dataFormRef.value) return;
   dataFormRef.value.resetFields();

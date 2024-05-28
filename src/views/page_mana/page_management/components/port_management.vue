@@ -37,7 +37,9 @@
       >
         <template v-slot="{ row }">
           <div style="display: flex; justify-content: center">
-            <svg-icon :iconName="row.state ? 'running' : 'stop'" size="15" />
+            <el-tag effect="plain" :type="row.state ? 'success' : 'danger'">
+              {{ row.state ? "监听中" : "未启用" }}
+            </el-tag>
           </div>
         </template>
       </vxe-column>
@@ -137,11 +139,11 @@ import {
   apiPortReload,
 } from "@/apis/page/port";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { usePageStore } from '@/store/page';
+import { usePageStore } from "@/store/page";
 import { storeToRefs } from "pinia";
 
 const pageStore = usePageStore();
-const { indexPort } = storeToRefs(pageStore)
+const { indexPort } = storeToRefs(pageStore);
 
 const nameTitle = "端口号";
 // 标题
@@ -222,10 +224,10 @@ const onAddClick = () => {
   visible.value = true;
 };
 
-const onRowClick = ({row, column}) => {
-  console.log('row', row, 'column', column);
+const onRowClick = ({ row, column }) => {
+  console.log("row", row, "column", column);
   pageStore.setIndexPort(row);
-}
+};
 
 const onSizeChange = (value) => {
   pageSize.value = value;
