@@ -10,7 +10,7 @@ body,
 
 .el-header {
   background: linear-gradient(194deg, rgb(61, 127, 252) 0%, rgb(4, 80, 255) 100%);
-  --el-header-height: 40px;
+  height: 40px;
   --el-header-padding: 0 5px 0 10px;
 }
 

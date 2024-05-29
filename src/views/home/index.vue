@@ -6,7 +6,7 @@
       </el-header>
       <el-container>
         <el-aside :width="menuWidth">
-            <Menu />
+          <Menu />
         </el-aside>
         <el-main>
           <RouterView />
@@ -31,20 +31,20 @@ console.log('menuWidth', menuWidth);
 </script>
 
 <style lang="scss" scoped>
-    .layout{
-        height: 100%;
-        width: 100%;
+.layout {
+  height: 100%;
+  width: 100%;
 
-        .el-container{
-            height: 100%;
+  .el-container {
+    height: 100%;
 
-            .el-aside {
-              box-shadow: 1px 0px 3px rgba(25, 41, 63, 0.1);
-            }
-
-            .el-main {
-                background-color: #F0F2F5;
-            }
-        }
+    .el-aside {
+      box-shadow: 1px 0px 3px rgba(25, 41, 63, 0.1);
     }
+
+    .el-main {
+      background-color: #F0F2F5;
+    }
+  }
+}
 </style>

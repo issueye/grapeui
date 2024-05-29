@@ -85,8 +85,14 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach((to, form, next) => {
+router.beforeEach((to, from, next) => {
     if (to.path === '/login') next()
+
+    console.log('from', from);
+    if (!from.name) {
+        from.name = 'Home';
+        next('/')
+    }
 
     let token = localStorage.getItem('token')
     if (!token) {

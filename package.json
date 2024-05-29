@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vxecli/import-unplugin-vue-components": "^1.0.3",
     "axios": "^1.6.7",
     "element-plus": "^2.6.0",
     "pinia": "^2.1.7",

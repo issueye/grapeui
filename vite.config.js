@@ -2,10 +2,17 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import path from 'path'
+import Components from 'unplugin-vue-components/vite'
+import { VxeResolver } from '@vxecli/import-unplugin-vue-components'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: './',
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src/'),
+    }
+  },
 
   plugins: [
     vue(),
@@ -15,12 +22,13 @@ export default defineConfig({
       // 指定symbolId格式
       symbolId: 'icon-[name]',
     }),
+
+    Components({
+      resolvers: [
+        VxeResolver({ libraryName: 'vxe-table' }),
+      ],
+    }),
   ],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src/'),
-    }
-  },
 
   server: {
     proxy: {

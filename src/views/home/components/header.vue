@@ -2,7 +2,7 @@
   <div class="header-box">
     <div class="grape-title">
       <img
-        src="@/assets/favicon_logosc/apple-touch-icon.png"
+        src="@/assets/images/icon.webp"
         style="width: 24px; height: 24px"
       /><span style="margin-left: 10px">代理服务管理系统</span>
     </div>
@@ -61,6 +61,7 @@ const dropdownClick = (value) => {
     case "退出登录": {
       route.push("/login");
       localStorage.clear();
+      sessionStorage.clear();
       break;
     }
   }

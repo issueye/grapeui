@@ -3,7 +3,7 @@
     <div class="login-box">
       <div>
         <img
-          src="@/assets/flower-login.jpg"
+          src="@/assets/images/flower-login.webp"
           alt=""
           width="300px"
           height="379px"
@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { apiLogin } from "../apis/sys/user";
 import { useUserStore } from "@/store/user";
@@ -49,6 +49,11 @@ const form = reactive({
   account: "",
   password: "",
 });
+
+onMounted(() => {
+  localStorage.clear();
+  sessionStorage.clear();
+})
 
 const loginClick = async () => {
   let res = await apiLogin(form);

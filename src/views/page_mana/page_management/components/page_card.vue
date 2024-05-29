@@ -27,18 +27,6 @@
           :icon="ChromeFilled"
           @click="onJumpUrlClick"
         />
-        <!-- <el-button
-          circle
-          color="#ee3f4d"
-          :icon="VideoPause"
-          @click="onStateClick"
-        /> -->
-        <!-- <el-button
-          color="#ee3f4d"
-          size="small"
-          :icon="Delete"
-          @click="onDeleteClick"
-        /> -->
       </div>
     </div>
   </el-card>
@@ -47,12 +35,10 @@
 <script setup>
 import {
   Edit,
-  VideoPlay,
   ChromeFilled,
-  VideoPause,
 } from "@element-plus/icons-vue";
 import { toRefs } from "vue";
-import defaultImg from "@/assets/images/default.png";
+import defaultImg from "@/assets/images/default.webp";
 import { usePageStore } from "@/store/page";
 import { storeToRefs } from "pinia";
 import { getImgPath } from "@/utils/utils";

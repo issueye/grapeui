@@ -198,7 +198,7 @@
 import { onMounted, reactive, ref } from "vue";
 import PageCard from "./page_card.vue";
 import { getImgPath } from "@/utils/utils";
-import defaultImage from "@/assets/images/default.png";
+import defaultImage from "@/assets/images/default.webp";
 import { nanoid } from "nanoid";
 
 import {
@@ -274,9 +274,9 @@ const listenSSE = (id) => {
   }
 
   sse.value = new EventSource("/api/v1/resource/upload/sse");
-  console.log("id", id);
+  // console.log("id", id);
   sse.value.addEventListener(id, (msg) => {
-    console.log("msg", msg);
+    // console.log("msg", msg);
     const msgData = JSON.parse(msg.data);
 
     uploadMessage.value = msgData.message;
@@ -291,7 +291,7 @@ const listenSSE = (id) => {
   });
 
   sse.value.onerror = (e) => {
-    console.log("e", e);
+    // console.log("e", e);
     sse.value.close();
   };
 };
@@ -337,11 +337,13 @@ onMounted(() => {
 
 // 获取数据
 const getData = async () => {
+  console.log('indexPort', indexPort.value);
+
   let sendData = {
     condition: form.condition,
     pageNum: pageNum.value,
     pageSize: pageSize.value,
-    portId: indexPort.id,
+    portId: indexPort.value.id,
   };
 
   await pageStore.getPageData(sendData);

@@ -179,6 +179,7 @@ const getData = async () => {
     condition: form.condition,
     pageNum: pageNum.value,
     pageSize: pageSize.value,
+    portId: indexPort.value.id,
   };
 
   pageStore.getRuleData(sendData);
