@@ -1,84 +1,43 @@
 <template>
   <el-form inline>
     <el-form-item label="检索">
-      <el-input
-        v-model="form.condition"
-        placeholder="请输入检索内容"
-        clearable
-        @change="onChange"
-      />
+      <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange" />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
       <el-button type="primary" @click="onUploadClick">上传</el-button>
+      <el-button type="primary" @click="onConfigTPClick">配置模板</el-button>
     </el-form-item>
   </el-form>
 
   <div class="table-box">
     <el-scrollbar :height="tableHeight">
       <div class="table-items">
-        <PageCard
-          :data="item"
-          v-for="(item, index) in tableData"
-          :key="index"
-          @edit="onEditClick"
-          @delete="onDeleteClick"
-        />
+        <PageCard :data="item" v-for="(item, index) in tableData" :key="index" @edit="onEditClick"
+          @delete="onDeleteClick" />
       </div>
     </el-scrollbar>
   </div>
   <div style="margin-top: 10px">
-    <el-pagination
-      small
-      background
-      :current-page="pageNum"
-      :page-size="pageSize"
-      :page-sizes="[5, 10, 20]"
-      :total="total"
-      layout="total, sizes, prev, pager, next"
-      @size-change="onSizeChange"
-      @current-change="onCurrentChange"
-    />
+    <el-pagination small background :current-page="pageNum" :page-size="pageSize" :page-sizes="[5, 10, 20]"
+      :total="total" layout="total, sizes, prev, pager, next" @size-change="onSizeChange"
+      @current-change="onCurrentChange" />
   </div>
 
-  <BsDialog
-    :title="title"
-    :width="700"
-    :visible="visible"
-    @close="onClose"
-    @save="onSave"
-    @open="onOpen"
-  >
+  <BsDialog :title="title" :width="700" :visible="visible" @close="onClose" @save="onSave" @open="onOpen">
     <template #body>
-      <el-form
-        label-width="auto"
-        :model="dataForm"
-        :rules="rules"
-        ref="dataFormRef"
-      >
+      <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="标题" prop="title">
-              <el-input
-                v-model="dataForm.title"
-                placeholder="请输入页面标题"
-                clearable
-              />
+              <el-input v-model="dataForm.title" placeholder="请输入页面标题" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="版本" prop="version">
-              <el-select
-                v-model="dataForm.version"
-                placeholder="请输入版本"
-                clearable
-              >
-                <el-option
-                  v-for="(item, index) in pageVersionData"
-                  :key="index"
-                  :value="item.version"
-                  :label="item.version"
-                />
+              <el-select v-model="dataForm.version" placeholder="请输入版本" clearable>
+                <el-option v-for="(item, index) in pageVersionData" :key="index" :value="item.version"
+                  :label="item.version" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -88,65 +47,31 @@
           <el-col :span="12">
             <el-form-item label="名称" prop="name">
               <div class="item">
-                <el-input
-                  v-model="dataForm.name"
-                  placeholder="请输入页面名称"
-                  clearable
-                />
+                <el-input v-model="dataForm.name" placeholder="请输入页面名称" clearable />
               </div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="版本路由" prop="useVersionRoute">
-              <el-switch
-                v-model="dataForm.useVersionRoute"
-                inline-prompt
-                active-text="启用"
-                inactive-text="停用"
-                :active-value="1"
-                :inactive-value="0"
-              />
+              <el-switch v-model="dataForm.useVersionRoute" inline-prompt active-text="启用" inactive-text="停用"
+                :active-value="1" :inactive-value="0" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-form-item label="备注">
-          <el-input
-            v-model="dataForm.mark"
-            placeholder="请输入备注"
-            type="textarea"
-            :row="5"
-            clearable
-          />
+          <el-input v-model="dataForm.mark" placeholder="请输入备注" type="textarea" :row="5" clearable />
         </el-form-item>
 
         <el-form-item label="简略图">
           <div :style="{ display: 'flex' }">
-            <el-image
-              style="width: 100px; height: 100px"
-              :src="
-                dataForm.thumbnail ? getPath(dataForm.thumbnail) : defaultImage
-              "
-              fit="cover"
-            />
-            <el-popover
-              placement="right"
-              :visible="resourceVisible"
-              :width="700"
-              trigger="click"
-            >
+            <el-image style="width: 100px; height: 100px" :src="dataForm.thumbnail ? getPath(dataForm.thumbnail) : defaultImage
+              " fit="cover" />
+            <el-popover placement="right" :visible="resourceVisible" :width="700" trigger="click">
               <template #reference>
-                <el-button
-                  style="margin-left: 10px"
-                  type="primary"
-                  @click="onSelectResourceClick"
-                  >选择资源</el-button
-                >
+                <el-button style="margin-left: 10px" type="primary" @click="onSelectResourceClick">选择资源</el-button>
               </template>
-              <BsResources
-                @onSelect="onSelect"
-                @onCancel="resourceVisible = false"
-              />
+              <BsResources @onSelect="onSelect" @onCancel="resourceVisible = false" />
             </el-popover>
           </div>
         </el-form-item>
@@ -154,41 +79,32 @@
     </template>
   </BsDialog>
 
-  <BsDialog
-    title="页面上传"
-    :width="500"
-    :visible="uploadVisible"
-    @close="onUploadClose"
-    @save="onUploadSave"
-    :showFooter="false"
-    @open="onUploadOpen"
-  >
+  <BsDialog title="页面上传" :width="500" :visible="uploadVisible" @close="onUploadClose" @save="onUploadSave"
+    :showFooter="false" @open="onUploadOpen">
     <template #body>
-      <div
-        style="display: flex; justify-content: flex-end; align-items: flex-end"
-      >
+      <div style="display: flex; justify-content: flex-end; align-items: flex-end">
         <div style="width: 100%; margin-right: 20px">
           <div style="margin: 10px 0 10px 0">{{ uploadMessage }}</div>
-          <el-progress
-            :percentage="progress"
-            :stroke-width="32"
-            striped
-            striped-flow
-            :duration="30"
-            :status="progressStatus"
-          />
+          <el-progress :percentage="progress" :stroke-width="32" striped striped-flow :duration="30"
+            :status="progressStatus" />
         </div>
-        <el-upload
-          :http-request="onUpload"
-          action=""
-          multiple
-          :show-file-list="false"
-          accept=".zip"
-        >
+        <el-upload :http-request="onUpload" action="" multiple :show-file-list="false" accept=".zip">
           <template #trigger>
             <el-button type="primary">上传</el-button>
           </template>
         </el-upload>
+      </div>
+    </template>
+  </BsDialog>
+
+  <BsDialog title="页面配置模板" :visible="tpVisible" @close="onTPClose">
+    <template #body>
+      <div>
+        <div style="display: inline-flex;align-items: center; justify-content: space-between; width: 100%; margin-bottom: 10px;">
+          <span>1.修改完模板内容之后将内容保存为  pageConfig.toml，并将配置文件放入静态资源打包根目录</span>
+          <el-button type="primary" @click="onCopyConfigInfoClick">复制配置信息</el-button>
+        </div>
+        <Codemirror v-model:value="code" :options="cmOptions" border ref="cmRef" height="400"></Codemirror>
       </div>
     </template>
   </BsDialog>
@@ -200,6 +116,9 @@ import PageCard from "./page_card.vue";
 import { getImgPath } from "@/utils/utils";
 import defaultImage from "@/assets/images/default.webp";
 import { nanoid } from "nanoid";
+import Codemirror from "codemirror-editor-vue3";
+import "codemirror/mode/toml/toml.js"
+import useClipboard from 'vue-clipboard3'
 
 import {
   apiPageCreate,
@@ -235,6 +154,28 @@ const uploadMessage = ref("上传文件");
 // progress
 const progress = ref(0);
 const progressStatus = ref("");
+
+// 页面配置模板
+const code = ref(
+`# 标题
+title = '后台管理系统'
+# 路由
+name = 'admin'
+# 版本
+version = '2.3.1.beta'
+# 产品编码
+productCode = '${nanoid()}'
+# 端口号
+port = 80
+`)
+const tpVisible = ref(false)
+const cmRef = ref()
+const cmOptions = {
+  mode: 'text/x-toml',
+}
+
+const { toClipboard } = useClipboard()
+
 // 表单验证规则
 const rules = reactive({
   title: [{ required: true, message: "请输入页面标题", trigger: "blur" }],
@@ -333,6 +274,8 @@ onMounted(() => {
   getData();
 
   tableHeight.value = document.documentElement.clientHeight - 276;
+
+  // cmRef.value.refresh();
 });
 
 // 获取数据
@@ -380,6 +323,24 @@ const setForm = (value) => {
 const onUploadClick = () => {
   uploadVisible.value = true;
 };
+
+const onConfigTPClick = () => {
+  tpVisible.value = true;
+}
+
+const onTPClose = () => {
+  tpVisible.value = false;
+}
+
+const onCopyConfigInfoClick = async () => {
+  try {
+    await toClipboard(code.value);
+    ElMessage.success('复制成功')
+  } catch (error) {
+    ElMessage.error('复制失败')
+  }
+}
+
 const onUploadClose = () => {
   uploadVisible.value = false;
 
@@ -394,7 +355,7 @@ const onUploadClose = () => {
 
   getData();
 };
-const onUploadSave = () => {};
+const onUploadSave = () => { };
 const onUploadOpen = () => {
   // 关闭 sse 连接
   if (sse.value) {

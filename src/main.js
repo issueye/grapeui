@@ -20,6 +20,7 @@ import BsMain from '@/components/bs_main/index.vue';
 import BsDialog from '@/components/bs_dialog/index.vue';
 import BsUpload from '@/components/bs_upload/index.vue';
 import BsResources from '@/components/bs_resources/index.vue';
+import { InstallCodemirro } from "codemirror-editor-vue3"
 
 import router from './router/index';
 
@@ -36,6 +37,7 @@ let app = createApp(App)
 app.use(router)
 app.use(pinia)
 app.use(ElementPlus)
+app.use(InstallCodemirro)
 app.component('svg-icon', svgIcon)
 app.component('BsHeader', BsHeader)
 app.component('BsMain', BsMain)
