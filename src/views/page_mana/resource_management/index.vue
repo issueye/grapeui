@@ -28,6 +28,7 @@
           size="mini"
           height="100%"
           stripe
+          empty-text="没有数据"
           auto-resize
           :row-config="{ isCurrent: true, isHover: true }"
         >

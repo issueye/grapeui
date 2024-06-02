@@ -1,7 +1,12 @@
 <template>
   <el-form inline>
     <el-form-item label="检索">
-      <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange" />
+      <el-input
+        v-model="form.condition"
+        placeholder="请输入检索内容"
+        clearable
+        @change="onChange"
+      />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
@@ -10,14 +15,41 @@
   </el-form>
 
   <div class="table-box" ref="element">
-    <vxe-table round border :data="tableData" size="mini" :height="tableHeight" stripe auto-resize
-      :row-config="{ isCurrent: true, isHover: true }" @cell-click="onRowClick" ref="tableRef">
+    <PortCard
+      v-for="(item, index) in tableData"
+      :data="item"
+      :key="index"
+      style="margin: 8px 0px"
+    />
+    <!-- <vxe-table
+      round
+      border
+      :data="tableData"
+      size="mini"
+      :height="tableHeight"
+      stripe
+      auto-resize
+      empty-text="没有数据"
+      :row-config="{ isCurrent: true, isHover: true }"
+      @cell-click="onRowClick"
+      ref="tableRef"
+    >
       <vxe-column field="port" title="端口号" width="100" align="left" />
       <vxe-column field="mark" title="备注" show-overflow />
-      <vxe-column field="state" title="状态" width="70" align="center" fixed="right">
+      <vxe-column
+        field="state"
+        title="状态"
+        width="70"
+        align="center"
+        fixed="right"
+      >
         <template v-slot="{ row }">
           <div style="display: flex; justify-content: center">
-            <el-tag size="small" effect="plain" :type="row.state ? 'success' : 'danger'">
+            <el-tag
+              size="small"
+              effect="plain"
+              :type="row.state ? 'success' : 'danger'"
+            >
               {{ row.state ? "监听中" : "未启用" }}
             </el-tag>
           </div>
@@ -25,40 +57,80 @@
       </vxe-column>
       <vxe-column title="操作" width="165" align="center" fixed="right">
         <template v-slot="{ row }">
-          <el-button type="primary" link size="small" @click="onEditClick(row)">编辑</el-button>
-          <el-button type="danger" link size="small" @click="onDeleteClick(row)">删除</el-button>
-          <el-dropdown @command="onCommand" style="margin-left: 10px;">
+          <el-button type="primary" link size="small" @click="onEditClick(row)"
+            >编辑</el-button
+          >
+          <el-button type="danger" link size="small" @click="onDeleteClick(row)"
+            >删除</el-button
+          >
+          <el-dropdown @command="onCommand" style="margin-left: 10px">
             <el-button type="primary" link size="small">
               更多<el-icon class="el-icon--right"><arrow-down /></el-icon>
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item :command="beforeHandleCommand('restart', row)">重启</el-dropdown-item>
-                <el-dropdown-item :command="beforeHandleCommand('start', row)">开启</el-dropdown-item>
-                <el-dropdown-item :command="beforeHandleCommand('stop', row)">关闭</el-dropdown-item>
+                <el-dropdown-item :command="beforeHandleCommand('restart', row)"
+                  >重启</el-dropdown-item
+                >
+                <el-dropdown-item :command="beforeHandleCommand('start', row)"
+                  >开启</el-dropdown-item
+                >
+                <el-dropdown-item :command="beforeHandleCommand('stop', row)"
+                  >关闭</el-dropdown-item
+                >
               </el-dropdown-menu>
             </template>
           </el-dropdown>
         </template>
       </vxe-column>
-    </vxe-table>
+    </vxe-table> -->
   </div>
   <div style="margin-top: 10px">
-    <el-pagination small background :current-page="pageNum" :page-size="pageSize" :page-sizes="[5, 10, 20]"
-      :total="total" layout="total, sizes, prev, pager, next" @size-change="onSizeChange"
-      @current-change="onCurrentChange" />
+    <el-pagination
+      small
+      background
+      :current-page="pageNum"
+      :page-size="pageSize"
+      :page-sizes="[5, 10, 20]"
+      :total="total"
+      layout="total, sizes, prev, pager, next"
+      @size-change="onSizeChange"
+      @current-change="onCurrentChange"
+    />
   </div>
 
-  <BsDialog :title="title" :width="500" :visible="visible" @close="onClose" @save="onSave">
+  <BsDialog
+    :title="title"
+    :width="500"
+    :visible="visible"
+    @close="onClose"
+    @save="onSave"
+  >
     <template #body>
-      <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
+      <el-form
+        label-width="auto"
+        :model="dataForm"
+        :rules="rules"
+        ref="dataFormRef"
+      >
         <el-form-item label="端口号" prop="port">
-          <el-input-number v-model="dataForm.port" placeholder="请输入端口号" clearable style="width: 100%"
-            :disabled="operationType == 1" />
+          <el-input-number
+            v-model="dataForm.port"
+            placeholder="请输入端口号"
+            clearable
+            style="width: 100%"
+            :disabled="operationType == 1"
+          />
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="dataForm.mark" placeholder="请输入备注" :disabled="dataForm.sys === 1 && operationType === 1"
-            type="textarea" :row="2" clearable />
+          <el-input
+            v-model="dataForm.mark"
+            placeholder="请输入备注"
+            :disabled="dataForm.sys === 1 && operationType === 1"
+            type="textarea"
+            :row="2"
+            clearable
+          />
         </el-form-item>
       </el-form>
     </template>
@@ -66,6 +138,8 @@
 </template>
 
 <script setup>
+import PortCard from "./port_card.vue";
+
 import { onMounted, reactive, ref } from "vue";
 
 import {
@@ -125,8 +199,6 @@ onMounted(() => {
   getData();
 
   tableHeight.value = document.documentElement.clientHeight - 240;
-
-  
 });
 
 // 获取数据
@@ -143,12 +215,12 @@ const getData = async () => {
     total.value = res.pageInfo.total;
 
     // 如果存储中有端口号则指向数据
-    if (tableData.value.length) {
-      const data = tableData.value.find(e => e.id === indexPort.value.id)
-      if (data) {
-        tableRef.value.setCurrentRow(data);
-      }
-    }
+    // if (tableData.value.length) {
+    //   const data = tableData.value.find((e) => e.id === indexPort.value.id);
+    //   if (data) {
+    //     tableRef.value.setCurrentRow(data);
+    //   }
+    // }
   }
 };
 

@@ -1,7 +1,12 @@
 <template>
   <el-form inline>
     <el-form-item label="检索">
-      <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange" />
+      <el-input
+        v-model="form.condition"
+        placeholder="请输入检索内容"
+        clearable
+        @change="onChange"
+      />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
@@ -10,44 +15,120 @@
   </el-form>
 
   <div class="table-box" ref="element">
-    <vxe-table round border :data="tableData" size="mini" :height="tableHeight" stripe auto-resize
-      :row-config="{ isCurrent: true, isHover: true }">
-      <vxe-column field="name" title="匹配路由" min-width="150" align="left" show-overflow />
-      <vxe-column field="targetRoute" title="目标路由" min-width="150" align="left" show-overflow />
-      <vxe-column field="method" title="请求方法" width="80" align="left" show-overflow />
-      <vxe-column field="target" title="目标地址" width="150" align="left" show-overflow />
-      <vxe-column field="matchType" title="匹配模式" width="80" align="left" show-overflow>
+    <vxe-table
+      round
+      border
+      :data="tableData"
+      size="mini"
+      :height="tableHeight"
+      stripe
+      auto-resize
+      empty-text="没有数据"
+      :row-config="{ isCurrent: true, isHover: true }"
+    >
+      <vxe-column
+        field="name"
+        title="匹配路由"
+        min-width="150"
+        align="left"
+        show-overflow
+      />
+      <vxe-column
+        field="targetRoute"
+        title="目标路由"
+        min-width="150"
+        align="left"
+        show-overflow
+      />
+      <vxe-column
+        field="method"
+        title="请求方法"
+        width="80"
+        align="left"
+        show-overflow
+      />
+      <vxe-column
+        field="target"
+        title="目标地址"
+        width="150"
+        align="left"
+        show-overflow
+      />
+      <vxe-column
+        field="matchType"
+        title="匹配模式"
+        width="80"
+        align="left"
+        show-overflow
+      >
         <template v-slot="{ row }">
-          <el-tag effect="plain" :type="row.matchType == 1 ? 'primary' : 'success'"> {{ row.matchType == 1 ? 'GIN': 'MUX' }}</el-tag>
-        </template>  
+          <el-tag
+            effect="plain"
+            :type="row.matchType == 1 ? 'primary' : 'success'"
+          >
+            {{ row.matchType == 1 ? "GIN" : "MUX" }}</el-tag
+          >
+        </template>
       </vxe-column>
       <vxe-column field="mark" title="备注" min-width="150" show-overflow />
       <vxe-column title="操作" width="140" align="center" fixed="right">
         <template v-slot="{ row }">
-          <el-button type="primary" link size="small" @click="onEditClick(row)">编辑</el-button>
-          <el-button type="danger" link size="small" @click="onDeleteClick(row)">删除</el-button>
+          <el-button type="primary" link size="small" @click="onEditClick(row)"
+            >编辑</el-button
+          >
+          <el-button type="danger" link size="small" @click="onDeleteClick(row)"
+            >删除</el-button
+          >
         </template>
       </vxe-column>
     </vxe-table>
   </div>
   <div style="margin-top: 10px">
-    <el-pagination small background :current-page="pageNum" :page-size="pageSize" :page-sizes="[5, 10, 20]"
-      :total="total" layout="total, sizes, prev, pager, next" @size-change="onSizeChange"
-      @current-change="onCurrentChange" />
+    <el-pagination
+      small
+      background
+      :current-page="pageNum"
+      :page-size="pageSize"
+      :page-sizes="[5, 10, 20]"
+      :total="total"
+      layout="total, sizes, prev, pager, next"
+      @size-change="onSizeChange"
+      @current-change="onCurrentChange"
+    />
   </div>
 
-  <BsDialog :title="title" :width="700" :visible.sync="visible" @close="onClose" @save="onSave" @open="onOpen">
+  <BsDialog
+    :title="title"
+    :width="700"
+    v-model:visible="visible"
+    @close="onClose"
+    @save="onSave"
+    @open="onOpen"
+  >
     <template #body>
-      <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
+      <el-form
+        label-width="auto"
+        :model="dataForm"
+        :rules="rules"
+        ref="dataFormRef"
+      >
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="匹配路由" prop="name">
-              <el-input v-model="dataForm.name" placeholder="请输入匹配路由" clearable />
+              <el-input
+                v-model="dataForm.name"
+                placeholder="请输入匹配路由"
+                clearable
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="目标路由" prop="targetRoute">
-              <el-input v-model="dataForm.targetRoute" placeholder="请输入目标路由" clearable />
+              <el-input
+                v-model="dataForm.targetRoute"
+                placeholder="请输入目标路由"
+                clearable
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -56,14 +137,27 @@
           <el-col :span="12">
             <el-form-item label="目标地址" prop="target">
               <!-- <el-input v-model="dataForm.target" placeholder="请输入目标地址" clearable /> -->
-              <el-select v-model="dataForm.targetId" placeholder="请选择目标地址" clearable>
-                <el-option v-for="(item, index) in targetTableData" :key="index" :label="item.mark" :value="item.id" />
+              <el-select
+                v-model="dataForm.targetId"
+                placeholder="请选择目标地址"
+                clearable
+              >
+                <el-option
+                  v-for="(item, index) in targetTableData"
+                  :key="index"
+                  :label="item.mark"
+                  :value="item.id"
+                />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="请求方法" prop="method">
-              <el-select v-model="dataForm.method" placeholder="请选择请求方法" clearable>
+              <el-select
+                v-model="dataForm.method"
+                placeholder="请选择请求方法"
+                clearable
+              >
                 <el-option label="GET" value="GET" />
                 <el-option label="POST" value="POST" />
                 <el-option label="PUT" value="PUT" />
@@ -78,7 +172,11 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="匹配模式" prop="matchType">
-              <el-select v-model="dataForm.matchType" placeholder="请输入匹配模式" clearable>
+              <el-select
+                v-model="dataForm.matchType"
+                placeholder="请输入匹配模式"
+                clearable
+              >
                 <el-option label="GIN" :value="1" />
                 <el-option label="MUX" :value="2" />
               </el-select>
@@ -87,8 +185,14 @@
         </el-row>
 
         <el-form-item label="备注">
-          <el-input v-model="dataForm.mark" placeholder="请输入备注" :disabled="dataForm.sys === 1 && operationType === 1"
-            type="textarea" :row="2" clearable />
+          <el-input
+            v-model="dataForm.mark"
+            placeholder="请输入备注"
+            :disabled="dataForm.sys === 1 && operationType === 1"
+            type="textarea"
+            :row="2"
+            clearable
+          />
         </el-form-item>
       </el-form>
     </template>
@@ -97,20 +201,18 @@
 
 <script setup>
 import { onMounted, reactive, ref } from "vue";
-import { usePageStore } from '@/store/page';
+import { usePageStore } from "@/store/page";
 import { storeToRefs } from "pinia";
 
 const pageStore = usePageStore();
-const { indexPort, ruleTableData: tableData, ruleTotal: total } = storeToRefs(pageStore)
+const {
+  indexPort,
+  ruleTableData: tableData,
+  ruleTotal: total,
+} = storeToRefs(pageStore);
 
-import {
-  apiRuleCreate,
-  apiRuleModify,
-  apiRuleDelete,
-} from "@/apis/page/rule";
-import {
-  apiTargetList
-} from '@/apis/page/target';
+import { apiRuleCreate, apiRuleModify, apiRuleDelete } from "@/apis/page/rule";
+import { apiTargetList } from "@/apis/page/target";
 
 import { ElMessage, ElMessageBox } from "element-plus";
 
@@ -144,14 +246,14 @@ const form = reactive({
 
 // 弹窗表单
 const dataForm = reactive({
-  id: '',
-  portId: '',
-  name: '',
-  targetRoute: '',
-  method: '',
-  targetId: '',
-  matchType: '',
-  mark: '',
+  id: "",
+  portId: "",
+  name: "",
+  targetRoute: "",
+  method: "",
+  targetId: "",
+  matchType: "",
+  mark: "",
 });
 
 //  表格数据
@@ -166,12 +268,12 @@ onMounted(() => {
 
 const getTargetData = async () => {
   const res = await apiTargetList();
-  console.log('getTargetData -> data', res);
+  console.log("getTargetData -> data", res);
   if (res.code === 200) {
     targetTableData.value = res.data;
-    console.log('targetTableData', targetTableData.value);
+    console.log("targetTableData", targetTableData.value);
   }
-}
+};
 
 // 获取数据
 const getData = async () => {
@@ -200,15 +302,15 @@ const resetForm = () => {
 // 赋值表单数据
 const setForm = (value) => {
   console.log("value", value);
-  
-  dataForm.id =  value.id;
-  dataForm.portId =  value.portId;
-  dataForm.name =  value.name;
-  dataForm.targetRoute =  value.targetRoute;
-  dataForm.method =  value.method;
-  dataForm.targetId =  value.targetId;
-  dataForm.matchType =  value.matchType;
-  dataForm.mark =  value.mark;
+
+  dataForm.id = value.id;
+  dataForm.portId = value.portId;
+  dataForm.name = value.name;
+  dataForm.targetRoute = value.targetRoute;
+  dataForm.method = value.method;
+  dataForm.targetId = value.targetId;
+  dataForm.matchType = value.matchType;
+  dataForm.mark = value.mark;
 };
 
 /**
@@ -313,8 +415,7 @@ const onClose = () => {
 
 const onOpen = () => {
   getTargetData();
-}
-
+};
 </script>
 
 <style lang="scss" scoped>

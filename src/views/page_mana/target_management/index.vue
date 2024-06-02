@@ -28,8 +28,9 @@
           size="mini"
           height="100%"
           stripe
+          empty-text="没有数据"
           auto-resize
-          :row-config="{isCurrent: true, isHover: true}"
+          :row-config="{ isCurrent: true, isHover: true }"
         >
           <vxe-column field="id" title="编码" show-overflow width="150" />
           <vxe-column field="name" title="目标地址" width="200" show-overflow />
