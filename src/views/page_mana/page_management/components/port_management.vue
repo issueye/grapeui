@@ -1,12 +1,14 @@
 <template>
   <el-form inline>
-    <el-form-item label="检索">
-      <el-input
-        v-model="form.condition"
-        placeholder="请输入检索内容"
-        clearable
-        @change="onChange"
-      />
+    <el-form-item>
+      <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange">
+        <!-- <template #append>
+          <div style="display: inline-flex;">
+            <el-button type="primary" :icon="Search" />
+            <el-button type="primary" :icon="Edit" />
+          </div>
+        </template> -->
+      </el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
@@ -15,122 +17,25 @@
   </el-form>
 
   <div class="table-box" ref="element">
-    <PortCard
-      v-for="(item, index) in tableData"
-      :data="item"
-      :key="index"
-      style="margin: 8px 0px"
-    />
-    <!-- <vxe-table
-      round
-      border
-      :data="tableData"
-      size="mini"
-      :height="tableHeight"
-      stripe
-      auto-resize
-      empty-text="没有数据"
-      :row-config="{ isCurrent: true, isHover: true }"
-      @cell-click="onRowClick"
-      ref="tableRef"
-    >
-      <vxe-column field="port" title="端口号" width="100" align="left" />
-      <vxe-column field="mark" title="备注" show-overflow />
-      <vxe-column
-        field="state"
-        title="状态"
-        width="70"
-        align="center"
-        fixed="right"
-      >
-        <template v-slot="{ row }">
-          <div style="display: flex; justify-content: center">
-            <el-tag
-              size="small"
-              effect="plain"
-              :type="row.state ? 'success' : 'danger'"
-            >
-              {{ row.state ? "监听中" : "未启用" }}
-            </el-tag>
-          </div>
-        </template>
-      </vxe-column>
-      <vxe-column title="操作" width="165" align="center" fixed="right">
-        <template v-slot="{ row }">
-          <el-button type="primary" link size="small" @click="onEditClick(row)"
-            >编辑</el-button
-          >
-          <el-button type="danger" link size="small" @click="onDeleteClick(row)"
-            >删除</el-button
-          >
-          <el-dropdown @command="onCommand" style="margin-left: 10px">
-            <el-button type="primary" link size="small">
-              更多<el-icon class="el-icon--right"><arrow-down /></el-icon>
-            </el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item :command="beforeHandleCommand('restart', row)"
-                  >重启</el-dropdown-item
-                >
-                <el-dropdown-item :command="beforeHandleCommand('start', row)"
-                  >开启</el-dropdown-item
-                >
-                <el-dropdown-item :command="beforeHandleCommand('stop', row)"
-                  >关闭</el-dropdown-item
-                >
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </template>
-      </vxe-column>
-    </vxe-table> -->
+    <PortCard :data="item" :key="index" style="margin: 8px 0px" v-for="(item, index) in tableData"
+      @on-click="onRowClick" @on-edit-click="onEditClick" @on-del-click="onDeleteClick" @on-stop-click="onStopClick" @on-reload-click="onReloadClick" />
   </div>
   <div style="margin-top: 10px">
-    <el-pagination
-      small
-      background
-      :current-page="pageNum"
-      :page-size="pageSize"
-      :page-sizes="[5, 10, 20]"
-      :total="total"
-      layout="total, sizes, prev, pager, next"
-      @size-change="onSizeChange"
-      @current-change="onCurrentChange"
-    />
+    <el-pagination small background :current-page="pageNum" :page-size="pageSize" :page-sizes="[5, 10, 20]"
+      :total="total" layout="total, sizes, prev, pager, next" @size-change="onSizeChange"
+      @current-change="onCurrentChange" />
   </div>
 
-  <BsDialog
-    :title="title"
-    :width="500"
-    :visible="visible"
-    @close="onClose"
-    @save="onSave"
-  >
+  <BsDialog :title="title" :width="500" :visible="visible" @close="onClose" @save="onSave">
     <template #body>
-      <el-form
-        label-width="auto"
-        :model="dataForm"
-        :rules="rules"
-        ref="dataFormRef"
-      >
+      <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
         <el-form-item label="端口号" prop="port">
-          <el-input-number
-            v-model="dataForm.port"
-            placeholder="请输入端口号"
-            clearable
-            style="width: 100%"
-            :disabled="operationType == 1"
-          />
+          <el-input-number v-model="dataForm.port" placeholder="请输入端口号" clearable style="width: 100%"
+            :disabled="operationType == 1" />
         </el-form-item>
         <el-form-item label="备注">
-          <el-input
-            v-model="dataForm.mark"
-            placeholder="请输入备注"
-            :disabled="dataForm.sys === 1 && operationType === 1"
-            type="textarea"
-            :row="2"
-            clearable
-          />
+          <el-input v-model="dataForm.mark" placeholder="请输入备注" :disabled="dataForm.sys === 1 && operationType === 1"
+            type="textarea" :row="2" clearable />
         </el-form-item>
       </el-form>
     </template>
@@ -139,7 +44,6 @@
 
 <script setup>
 import PortCard from "./port_card.vue";
-
 import { onMounted, reactive, ref } from "vue";
 
 import {
@@ -213,14 +117,6 @@ const getData = async () => {
   if (res.code === 200) {
     tableData.value = res.data;
     total.value = res.pageInfo.total;
-
-    // 如果存储中有端口号则指向数据
-    // if (tableData.value.length) {
-    //   const data = tableData.value.find((e) => e.id === indexPort.value.id);
-    //   if (data) {
-    //     tableRef.value.setCurrentRow(data);
-    //   }
-    // }
   }
 };
 
@@ -247,9 +143,8 @@ const onAddClick = () => {
   visible.value = true;
 };
 
-const onRowClick = ({ row, column }) => {
-  console.log("row", row, "column", column);
-  pageStore.setIndexPort(row);
+const onRowClick = (data) => {
+  pageStore.setIndexPort(data.value);
 };
 
 const onSizeChange = (value) => {
@@ -257,57 +152,25 @@ const onSizeChange = (value) => {
   getData();
 };
 
-const beforeHandleCommand = (command, row) => {
-  return {
-    command: command,
-    row: row,
-  };
-};
-
-const onCommand = async (command) => {
-  switch (command.command) {
-    case "state": {
-      const res = await apiPortModifyState(command.row.id);
-      if (res.code === 200) {
-        ElMessage.success(res.message);
-        getData();
-      } else {
-        ElMessage.error(res.message);
-      }
-      break;
-    }
-    case "start": {
-      const res = await apiPortStart(command.row.id);
-      if (res.code === 200) {
-        ElMessage.success(res.message);
-        getData();
-      } else {
-        ElMessage.error(res.message);
-      }
-      break;
-    }
-    case "stop": {
-      const res = await apiPortStop(command.row.id);
-      if (res.code === 200) {
-        ElMessage.success(res.message);
-        getData();
-      } else {
-        ElMessage.error(res.message);
-      }
-      break;
-    }
-    case "restart": {
-      const res = await apiPortReload(command.row.id);
-      if (res.code === 200) {
-        ElMessage.success(res.message);
-        getData();
-      } else {
-        ElMessage.error(res.message);
-      }
-      break;
-    }
+const onStopClick = async (data) => {
+  const res = await apiPortStop(data.value.id);
+  if (res.code === 200) {
+    ElMessage.success(res.message);
+    getData();
+  } else {
+    ElMessage.error(res.message);
   }
-};
+}
+
+const onReloadClick = async (data) => {
+  const res = await apiPortReload(data.value.id);
+      if (res.code === 200) {
+        ElMessage.success(res.message);
+        getData();
+      } else {
+        ElMessage.error(res.message);
+      }
+}
 
 const onCurrentChange = () => {
   getData();
@@ -321,10 +184,10 @@ const onQryClick = () => {
   getData();
 };
 
-const onEditClick = (value) => {
+const onEditClick = (data) => {
   operationType.value = 1;
   title.value = `[编辑]${nameTitle}`;
-  setForm(value);
+  setForm(data.value);
   visible.value = true;
 };
 
@@ -339,14 +202,14 @@ const onEditStateClick = async (value) => {
   getData();
 };
 
-const onDeleteClick = (value) => {
+const onDeleteClick = (data) => {
   ElMessageBox.confirm("请确认是否要删除数据？", "警告", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
   })
     .then(async () => {
-      let res = await apiPortDelete(value.id);
+      let res = await apiPortDelete(data.value.id);
       if (res.code !== 200) {
         ElMessage.error(res.message);
         return;
@@ -407,7 +270,7 @@ const onClose = () => {
 
 <style lang="scss" scoped>
 .table-box {
-  height: calc(100% - 85px);
+  height: calc(100% - 142px);
 
   ::deep .vxe-table--border {
     border: none;

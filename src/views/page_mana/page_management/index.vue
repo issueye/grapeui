@@ -13,8 +13,11 @@
             <el-tab-pane label="页面管理" name="page">
               <PageCommon />
             </el-tab-pane>
-            <el-tab-pane label="转发管理" name="proxy">
+            <el-tab-pane label="转发规则管理" name="proxy">
               <ProxyRules />
+            </el-tab-pane>
+            <el-tab-pane label="gzip过滤管理" name="filter">
+              <GzipFilter />
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -27,6 +30,7 @@
 import PortManagement from "./components/port_management.vue";
 import PageCommon from "./components/page_common.vue";
 import ProxyRules from "./components/proxy_rules.vue";
+import GzipFilter from './components/gzip_filter.vue';
 import { ref } from "vue";
 
 const activeName = ref("page");

@@ -8,6 +8,9 @@ import {
 import {
     apiRuleList
 } from "@/apis/page/rule";
+import {
+    apiGzipFilterList
+} from '@/apis/page/gzip_filter';
 
 export const usePageStore = defineStore(
     'page',
@@ -29,6 +32,9 @@ export const usePageStore = defineStore(
         const ruleTableData = ref([])
         const ruleTotal = ref(0)
 
+        const gzipFilterTableData = ref([])
+        const gzipFilterTotal = ref(0)
+
         /**
          * 获取页面数据
          */
@@ -45,6 +51,14 @@ export const usePageStore = defineStore(
             if (res.code === 200) {
                 ruleTableData.value = res.data;
                 ruleTotal.value = res.pageInfo.total;
+            }
+        }
+
+        const getGzipFilterData = async (params) => {
+            let res = await apiGzipFilterList(params)
+            if (res.code === 200) {
+                gzipFilterTableData.value = res.data;
+                gzipFilterTotal.value = res.pageInfo.total;
             }
         }
 
@@ -67,6 +81,7 @@ export const usePageStore = defineStore(
             
             getPageData(sendData);
             getRuleData(sendData);
+            getGzipFilterData(sendData);
         }
 
         return {
@@ -75,8 +90,11 @@ export const usePageStore = defineStore(
             pageTotal,
             ruleTableData,
             ruleTotal,
+            gzipFilterTableData,
+            gzipFilterTotal,
             getPageData,
             getRuleData,
+            getGzipFilterData,
             setIndexPort,
         }
     },
