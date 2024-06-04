@@ -12,8 +12,11 @@
   <div class="table-box" ref="element">
     <vxe-table round border :data="tableData" size="mini" :height="tableHeight" stripe auto-resize empty-text="没有数据"
       :row-config="{ isCurrent: true, isHover: true }">
-      <vxe-column field="matchContent" title="匹配内容" min-width="150" align="left" show-overflow />
-      <vxe-column field="matchType" title="匹配类型" min-width="150" align="left" show-overflow>
+      <vxe-column field="matchContent" title="匹配内容" width="300" align="left" show-overflow />
+      <vxe-column field="matchType" title="匹配类型" width="150" align="left" show-overflow>
+      <template v-slot="{ row }">
+        {{ getType(row) }}
+      </template>
       </vxe-column>
       <vxe-column field="mark" title="备注" min-width="150" show-overflow />
       <vxe-column title="操作" width="140" align="center" fixed="right">
@@ -30,7 +33,7 @@
       @current-change="onCurrentChange" />
   </div>
 
-  <!-- <BsDialog :title="title" :width="500" v-model:visible="visible" @close="onClose" @save="onSave" @open="onOpen">
+  <BsDialog :title="title" :width="500" v-model:visible="visible" @close="onClose" @save="onSave" @open="onOpen">
     <template #body>
       <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
         <el-form-item label="匹配模式" prop="matchType">
@@ -49,7 +52,7 @@
         </el-form-item>
       </el-form>
     </template>
-  </BsDialog> -->
+  </BsDialog>
 </template>
 
 <script setup>
@@ -78,7 +81,7 @@ const visible = ref(false);
 // 操作类型
 const operationType = ref(0);
 // 数据表单
-// const dataFormRef = ref();
+const dataFormRef = ref();
 // // 表单验证规则
 // const rules = reactive({
 //   matchContent: [{ required: true, message: "请输入匹配内容", trigger: "blur" }],
@@ -102,24 +105,24 @@ const dataForm = reactive({
   mark: "",
 });
 
-// // 组件加载完成
-// onMounted(() => {
-//   // getData();
-//   // tableHeight.value = element.value.offsetHeight;
-// });
+// 组件加载完成
+onMounted(() => {
+  // getData();
+  // tableHeight.value = element.value.offsetHeight;
+});
 
-// const getType = (data) => {
-//   switch (data.matchType) {
-//     case 1:
-//       return 'URL路由'
-//     case 2:
-//       return '文件后缀'
-//     case 3:
-//       return '正则表达式'
-//     default:
-//       return ''
-//   }
-// }
+const getType = (data) => {
+  switch (data.matchType) {
+    case 1:
+      return 'URL路由'
+    case 2:
+      return '文件后缀'
+    case 3:
+      return '正则表达式'
+    default:
+      return ''
+  }
+}
 
 // 获取数据
 const getData = async () => {
@@ -142,41 +145,41 @@ const resetForm = () => {
   dataForm.mark = "";
 };
 
-// // 赋值表单数据
-// dataForm.id = value.id;
-// const setForm = (value) => {
-//   dataForm.portId = indexPort.value.portId;
-//   dataForm.matchContent = value.matchContent;
-//   dataForm.matchType = value.matchType;
-//   dataForm.mark = value.mark;
-// };
+// 赋值表单数据
+const setForm = (value) => {
+  dataForm.id = value.id;
+  dataForm.portId = indexPort.value.portId;
+  dataForm.matchContent = value.matchContent;
+  dataForm.matchType = value.matchType;
+  dataForm.mark = value.mark;
+};
 
-// /**
-//  * 添加事件
-//  */
-// const onAddClick = () => {
-//   operationType.value = 0;
-//   title.value = `[添加]${nameTitle}`;
-//   resetForm();
-//   visible.value = true;
-// };
+/**
+ * 添加事件
+ */
+const onAddClick = () => {
+  operationType.value = 0;
+  title.value = `[添加]${nameTitle}`;
+  resetForm();
+  visible.value = true;
+};
 
-// const onSizeChange = (value) => {
-//   pageSize.value = value;
-//   getData();
-// };
+const onSizeChange = (value) => {
+  pageSize.value = value;
+  getData();
+};
 
-// const onCurrentChange = () => {
-//   getData();
-// };
+const onCurrentChange = () => {
+  getData();
+};
 
-// const onChange = () => {
-//   getData();
-// };
+const onChange = () => {
+  getData();
+};
 
-// const onQryClick = () => {
-//   getData();
-// };
+const onQryClick = () => {
+  getData();
+};
 
 const onEditClick = (value) => {
   operationType.value = 1;
@@ -185,71 +188,73 @@ const onEditClick = (value) => {
   visible.value = true;
 };
 
-// const onDeleteClick = (value) => {
-//   ElMessageBox.confirm("请确认是否要删除数据？", "警告", {
-//     confirmButtonText: "确定",
-//     cancelButtonText: "取消",
-//     type: "warning",
-//   })
-//     .then(async () => {
-//       let res = await apiGzipFilterDelete(value.id);
-//       if (res.code !== 200) {
-//         ElMessage.error(res.message);
-//         return;
-//       }
+const onDeleteClick = (value) => {
+  ElMessageBox.confirm("请确认是否要删除数据？", "警告", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(async () => {
+      let res = await apiGzipFilterDelete(value.id);
+      if (res.code !== 200) {
+        ElMessage.error(res.message);
+        return;
+      }
 
-//       ElMessage.success("删除成功");
-//       getData();
-//     })
-//     .catch(() => {
-//       ElMessage.info("取消删除");
-//     });
-// };
+      ElMessage.success("删除成功");
+      getData();
+    })
+    .catch(() => {
+      ElMessage.info("取消删除");
+    });
+};
 
-// const onSave = () => {
-//   if (!dataFormRef.value) return;
-//   dataFormRef.value.validate(async (valid) => {
-//     if (valid) {
-//       switch (operationType.value) {
-//         case 0: {
-//           dataForm.port = indexPort.port;
-//           const res = await apiGzipFilterCreate(dataForm);
-//           if (res.code !== 200) {
-//             ElMessage.error(res.message);
-//             return;
-//           }
+const onSave = () => {
+  if (!dataFormRef.value) return;
+  dataFormRef.value.validate(async (valid) => {
+    if (valid) {
+      switch (operationType.value) {
+        case 0: {
+          console.log('indexPort.value', indexPort.value);
+          dataForm.portId = indexPort.value.id;
+          console.log('dataForm', dataForm);
+          const res = await apiGzipFilterCreate(dataForm);
+          if (res.code !== 200) {
+            ElMessage.error(res.message);
+            return;
+          }
 
-//           ElMessage.success(res.message);
-//           visible.value = false;
-//           getData();
-//           break;
-//         }
+          ElMessage.success(res.message);
+          visible.value = false;
+          getData();
+          break;
+        }
 
-//         case 1: {
-//           const res = await apiGzipFilterModify(dataForm);
-//           if (res.code !== 200) {
-//             ElMessage.error(res.message);
-//             return;
-//           }
+        case 1: {
+          const res = await apiGzipFilterModify(dataForm);
+          if (res.code !== 200) {
+            ElMessage.error(res.message);
+            return;
+          }
 
-//           ElMessage.success(res.message);
-//           visible.value = false;
-//           getData();
-//           break;
-//         }
-//       }
-//     } else {
-//       console.log("表单验证失败");
-//     }
-//   });
-// };
+          ElMessage.success(res.message);
+          visible.value = false;
+          getData();
+          break;
+        }
+      }
+    } else {
+      console.log("表单验证失败");
+    }
+  });
+};
 
-// const onClose = () => {
-//   visible.value = false;
+const onClose = () => {
+  visible.value = false;
 
-//   if (!dataFormRef.value) return;
-//   dataFormRef.value.resetFields();
-// };
+ if (!dataFormRef.value) return;
+  dataFormRef.value.resetFields();
+};
 
 // const onOpen = () => {
 // };

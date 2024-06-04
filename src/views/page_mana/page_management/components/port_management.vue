@@ -18,7 +18,7 @@
 
   <div class="table-box" ref="element">
     <PortCard :data="item" :key="index" style="margin: 8px 0px" v-for="(item, index) in tableData"
-      @on-click="onRowClick" @on-edit-click="onEditClick" @on-del-click="onDeleteClick" @on-stop-click="onStopClick" @on-reload-click="onReloadClick" />
+      @on-click="onRowClick" @on-edit-click="onEditClick" @on-stop-click="onStopClick" @on-reload-click="onReloadClick" />
   </div>
   <div style="margin-top: 10px">
     <el-pagination small background :current-page="pageNum" :page-size="pageSize" :page-sizes="[5, 10, 20]"
@@ -52,7 +52,6 @@ import {
   apiPortModify,
   apiPortModifyState,
   apiPortDelete,
-  apiPortStart,
   apiPortStop,
   apiPortReload,
 } from "@/apis/page/port";
@@ -61,7 +60,7 @@ import { usePageStore } from "@/store/page";
 import { storeToRefs } from "pinia";
 
 const pageStore = usePageStore();
-const { indexPort } = storeToRefs(pageStore);
+const { tableData, total, pageNum, pageSize, form } = storeToRefs(pageStore);
 
 const nameTitle = "端口号";
 // 标题
@@ -78,15 +77,6 @@ const dataFormRef = ref();
 const rules = reactive({
   port: [{ required: true, message: "请输入端口号", trigger: "blur" }],
 });
-// 分页
-const pageNum = ref(1);
-const pageSize = ref(10);
-const total = ref(0);
-
-// 查询表单
-const form = reactive({
-  condition: "",
-});
 
 // 弹窗表单
 const dataForm = reactive({
@@ -95,7 +85,6 @@ const dataForm = reactive({
 });
 
 //  表格数据
-const tableData = ref([]);
 const tableRef = ref(null);
 
 // 组件加载完成
@@ -107,17 +96,7 @@ onMounted(() => {
 
 // 获取数据
 const getData = async () => {
-  let sendData = {
-    condition: form.condition,
-    pageNum: pageNum.value,
-    pageSize: pageSize.value,
-  };
-
-  let res = await apiPortList(sendData);
-  if (res.code === 200) {
-    tableData.value = res.data;
-    total.value = res.pageInfo.total;
-  }
+  pageStore.getData();
 };
 
 // 重置表单数据
@@ -128,7 +107,7 @@ const resetForm = () => {
 
 // 赋值表单数据
 const setForm = (value) => {
-  console.log("value", value);
+  // console.log("value", value);
   dataForm.port = value.port;
   dataForm.mark = value.mark;
 };

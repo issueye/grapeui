@@ -56,6 +56,18 @@ export const apiPortModifyState = (id) => {
  * @param {*} id 
  * @returns 
  */
+export const apiPortGzip = (id) => {
+    return request({
+        url: `api/v1/port/gzip/${id}`,
+        method: 'put',
+    })
+}
+
+/**
+ * 启动监听端口号
+ * @param {*} id 
+ * @returns 
+ */
 export const apiPortStart = (id) => {
     return request({
         url: `api/v1/port/start/${id}`,

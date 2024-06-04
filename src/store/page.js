@@ -12,6 +12,10 @@ import {
     apiGzipFilterList
 } from '@/apis/page/gzip_filter';
 
+import {
+    apiPortList,
+} from "@/apis/page/port";
+
 export const usePageStore = defineStore(
     'page',
     () => {
@@ -26,6 +30,16 @@ export const usePageStore = defineStore(
             createdAt: '',
         })
 
+        const pageNum = ref(1)
+        const pageSize = ref(10)
+        // 查询表单
+        const form = reactive({
+            condition: "",
+        });
+
+        const tableData = ref([])
+        const total = ref(0)
+
         const pageTableData = ref([])
         const pageTotal = ref(0)
 
@@ -35,30 +49,66 @@ export const usePageStore = defineStore(
         const gzipFilterTableData = ref([])
         const gzipFilterTotal = ref(0)
 
+        const getData = async () => {
+            let sendData = {
+                condition: form.condition,
+                pageNum: pageNum.value,
+                pageSize: pageSize.value,
+              };
+
+            let res = await apiPortList(sendData)
+            if (res.code == 200) {
+                if (res.data) {
+                    tableData.value = res.data;
+                }
+
+                if (res.pageInfo) {
+                    total.value = res.pageInfo.total;
+                }
+            }
+        }
+
         /**
          * 获取页面数据
          */
         const getPageData = async (params) => {
             let res = await apiPageList(params);
             if (res.code === 200) {
-                pageTableData.value = res.data;
-                pageTotal.value = res.pageInfo.total;
+                if (res.data) {
+                    pageTableData.value = res.data;
+                }
+
+                if (res.pageInfo) {
+                    pageTotal.value = res.pageInfo.total;
+                }
             }
         }
 
         const getRuleData = async (params) => {
             let res = await apiRuleList(params)
             if (res.code === 200) {
-                ruleTableData.value = res.data;
-                ruleTotal.value = res.pageInfo.total;
+
+                if (res.data) {
+                    ruleTableData.value = res.data;
+                }
+
+                if (res.pageInfo) {
+                    ruleTotal.value = res.pageInfo.total;
+                }
             }
         }
 
         const getGzipFilterData = async (params) => {
             let res = await apiGzipFilterList(params)
             if (res.code === 200) {
-                gzipFilterTableData.value = res.data;
-                gzipFilterTotal.value = res.pageInfo.total;
+
+                if (res.data) {
+                    gzipFilterTableData.value = res.data;
+                }
+
+                if (res.pageInfo) {
+                    gzipFilterTotal.value = res.pageInfo.total;
+                }
             }
         }
 
@@ -78,7 +128,7 @@ export const usePageStore = defineStore(
                 pageSize: 10,
                 portId: indexPort.id,
             };
-            
+
             getPageData(sendData);
             getRuleData(sendData);
             getGzipFilterData(sendData);
@@ -86,12 +136,19 @@ export const usePageStore = defineStore(
 
         return {
             indexPort,
+            tableData,
+            form,
+            pageNum,
+            pageSize,
+            total,
             pageTableData,
             pageTotal,
             ruleTableData,
             ruleTotal,
             gzipFilterTableData,
             gzipFilterTotal,
+
+            getData,
             getPageData,
             getRuleData,
             getGzipFilterData,
@@ -104,4 +161,4 @@ export const usePageStore = defineStore(
             storage: localStorage,
         },
     }
-    )
+)
