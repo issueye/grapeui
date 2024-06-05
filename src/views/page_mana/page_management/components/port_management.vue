@@ -1,6 +1,14 @@
 <template>
-  <div style="display: inline-flex;justify-content: space-between; width: 100%;">
-    <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange" style="width: 200px;" />
+  <div
+    style="display: inline-flex; justify-content: space-between; width: 100%"
+  >
+    <el-input
+      v-model="form.condition"
+      placeholder="请输入检索内容"
+      clearable
+      @change="onChange"
+      style="width: 200px"
+    />
     <div style="display: inline-flex; margin-left: 5px">
       <el-button type="primary" @click="onAddClick">添加</el-button>
       <el-button type="primary" @click="onFreshSTClick">刷新统计</el-button>
@@ -8,25 +16,63 @@
   </div>
 
   <div class="table-box" ref="element">
-    <PortCard :data="item" :key="index" style="margin: 16px 0px" v-for="(item, index) in tableData"
-      @on-click="onRowClick" @on-edit-click="onEditClick" @on-stop-click="onStopClick" @on-reload-click="onReloadClick" />
+    <PortCard
+      :data="item"
+      :key="index"
+      style="margin: 16px 0px"
+      v-for="(item, index) in tableData"
+      @on-click="onRowClick"
+      @on-edit-click="onEditClick"
+      @on-stop-click="onStopClick"
+      @on-reload-click="onReloadClick"
+    />
   </div>
   <div style="margin-top: 10px">
-    <el-pagination small background :current-page="pageNum" :page-size="pageSize" :page-sizes="[5, 10, 20]"
-      :total="total" layout="total, sizes, prev, pager, next" @size-change="onSizeChange"
-      @current-change="onCurrentChange" />
+    <el-pagination
+      small
+      background
+      :current-page="pageNum"
+      :page-size="pageSize"
+      :page-sizes="[5, 10, 20]"
+      :total="total"
+      layout="total, sizes, prev, pager, next"
+      @size-change="onSizeChange"
+      @current-change="onCurrentChange"
+    />
   </div>
 
-  <BsDialog :title="title" :width="500" :visible="visible" @close="onClose" @save="onSave">
+  <BsDialog
+    :title="title"
+    :width="500"
+    :visible="visible"
+    @close="onClose"
+    @save="onSave"
+  >
     <template #body>
-      <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
+      <el-form
+        label-width="auto"
+        :model="dataForm"
+        :rules="rules"
+        ref="dataFormRef"
+      >
         <el-form-item label="端口号" prop="port">
-          <el-input-number v-model="dataForm.port" placeholder="请输入端口号" clearable style="width: 100%"
-            :disabled="operationType == 1" />
+          <el-input-number
+            v-model="dataForm.port"
+            placeholder="请输入端口号"
+            clearable
+            style="width: 100%"
+            :disabled="operationType == 1"
+          />
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="dataForm.mark" placeholder="请输入备注" :disabled="dataForm.sys === 1 && operationType === 1"
-            type="textarea" :row="2" clearable />
+          <el-input
+            v-model="dataForm.mark"
+            placeholder="请输入备注"
+            :disabled="dataForm.sys === 1 && operationType === 1"
+            type="textarea"
+            :row="2"
+            clearable
+          />
         </el-form-item>
       </el-form>
     </template>
@@ -117,7 +163,7 @@ const onAddClick = () => {
 const onFreshSTClick = async () => {
   await apiPortRefreshStatistics();
   getData();
-}
+};
 
 const onRowClick = (data) => {
   pageStore.setIndexPort(data.value);
@@ -136,17 +182,17 @@ const onStopClick = async (data) => {
   } else {
     ElMessage.error(res.message);
   }
-}
+};
 
 const onReloadClick = async (data) => {
   const res = await apiPortReload(data.value.id);
-      if (res.code === 200) {
-        ElMessage.success(res.message);
-        getData();
-      } else {
-        ElMessage.error(res.message);
-      }
-}
+  if (res.code === 200) {
+    ElMessage.success(res.message);
+    getData();
+  } else {
+    ElMessage.error(res.message);
+  }
+};
 
 const onCurrentChange = () => {
   getData();
@@ -246,7 +292,7 @@ const onClose = () => {
 
 <style lang="scss" scoped>
 .table-box {
-  height: calc(100% - 87px);
+  height: calc(100% - 90px);
 
   ::deep .vxe-table--border {
     border: none;

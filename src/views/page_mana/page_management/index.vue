@@ -30,7 +30,7 @@
 import PortManagement from "./components/port_management.vue";
 import PageCommon from "./components/page_common.vue";
 import ProxyRules from "./components/proxy_rules.vue";
-import GzipFilter from './components/gzip_filter.vue';
+import GzipFilter from "./components/gzip_filter.vue";
 import { ref } from "vue";
 
 const activeName = ref("page");
@@ -49,13 +49,13 @@ const onTabsClick = () => {};
   .left-box {
     padding: 10px;
     border-right: 1px solid #d9d9d9;
-    height: calc(100% - 20px);
+    height: calc(100% - 15px);
     background-color: #fff;
   }
 
   .right-box {
     padding: 10px;
-    height: calc(100% - 20px);
+    height: calc(100% - 15px);
     background-color: #fff;
   }
 }
