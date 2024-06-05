@@ -1,23 +1,14 @@
 <template>
-  <el-form inline>
-    <el-form-item>
-      <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange">
-        <!-- <template #append>
-          <div style="display: inline-flex;">
-            <el-button type="primary" :icon="Search" />
-            <el-button type="primary" :icon="Edit" />
-          </div>
-        </template> -->
-      </el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="onQryClick">查询</el-button>
+  <div style="display: inline-flex;justify-content: space-between; width: 100%;">
+    <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange" style="width: 200px;" />
+    <div style="display: inline-flex; margin-left: 5px">
       <el-button type="primary" @click="onAddClick">添加</el-button>
-    </el-form-item>
-  </el-form>
+      <el-button type="primary" @click="onFreshSTClick">刷新统计</el-button>
+    </div>
+  </div>
 
   <div class="table-box" ref="element">
-    <PortCard :data="item" :key="index" style="margin: 8px 0px" v-for="(item, index) in tableData"
+    <PortCard :data="item" :key="index" style="margin: 16px 0px" v-for="(item, index) in tableData"
       @on-click="onRowClick" @on-edit-click="onEditClick" @on-stop-click="onStopClick" @on-reload-click="onReloadClick" />
   </div>
   <div style="margin-top: 10px">
@@ -54,6 +45,7 @@ import {
   apiPortDelete,
   apiPortStop,
   apiPortReload,
+  apiPortRefreshStatistics,
 } from "@/apis/page/port";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { usePageStore } from "@/store/page";
@@ -121,6 +113,11 @@ const onAddClick = () => {
   resetForm();
   visible.value = true;
 };
+
+const onFreshSTClick = async () => {
+  await apiPortRefreshStatistics();
+  getData();
+}
 
 const onRowClick = (data) => {
   pageStore.setIndexPort(data.value);
@@ -249,7 +246,7 @@ const onClose = () => {
 
 <style lang="scss" scoped>
 .table-box {
-  height: calc(100% - 142px);
+  height: calc(100% - 87px);
 
   ::deep .vxe-table--border {
     border: none;

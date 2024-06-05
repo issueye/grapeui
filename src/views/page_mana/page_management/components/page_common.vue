@@ -408,7 +408,7 @@ const onSelect = (value) => {
 onMounted(() => {
   getData();
 
-  tableHeight.value = document.documentElement.clientHeight - 276;
+  tableHeight.value = document.documentElement.clientHeight - 268;
 
   // cmRef.value.refresh();
 });

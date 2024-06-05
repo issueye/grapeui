@@ -21,6 +21,7 @@
                 placeholder="请输入密码"
                 type="password"
                 v-model="form.password"
+                @keyup.enter="loginClick"
               />
             </el-form-item>
 

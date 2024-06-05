@@ -14,6 +14,19 @@ export const apiPortList = (params) => {
 }
 
 /**
+ * 刷新统计信息
+ * @param {*} params 
+ * @returns 
+ */
+export const apiPortRefreshStatistics = () => {
+    return request({
+        url: 'api/v1/port/refreshStatistics',
+        method: 'get',
+    })
+}
+
+
+/**
  * 创建端口号
  * @param {*} data 
  * @returns 
