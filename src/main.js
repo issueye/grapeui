@@ -2,10 +2,12 @@ import { createApp } from 'vue'
 import 'normalize.css/normalize.css'
 
 import ElementPlus from 'element-plus'
+
+import 'vxe-table/lib/style.css'
+import '@/assets/css/tailwind.css'
 import 'element-plus/dist/index.css'
 import './assets/css/style.css'
 import './assets/css/vars.scss'
-import 'vxe-table/lib/style.css'
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 

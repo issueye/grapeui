@@ -1,7 +1,12 @@
 <template>
   <el-form inline>
     <el-form-item label="检索">
-      <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange" />
+      <el-input
+        v-model="form.condition"
+        placeholder="请输入检索内容"
+        clearable
+        @change="onChange"
+      />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onQryClick">查询</el-button>
@@ -10,45 +15,103 @@
   </el-form>
 
   <div class="table-box" ref="element">
-    <vxe-table round border :data="tableData" size="mini" :height="tableHeight" stripe auto-resize empty-text="没有数据"
-      :row-config="{ isCurrent: true, isHover: true }">
-      <vxe-column field="matchContent" title="匹配内容" width="300" align="left" show-overflow />
-      <vxe-column field="matchType" title="匹配类型" width="150" align="left" show-overflow>
-      <template v-slot="{ row }">
-        {{ getType(row) }}
-      </template>
+    <vxe-table
+      round
+      border
+      :data="tableData"
+      size="mini"
+      :height="tableHeight"
+      stripe
+      auto-resize
+      empty-text="没有数据"
+      :row-config="{ isCurrent: true, isHover: true }"
+    >
+      <vxe-column
+        field="matchContent"
+        title="匹配内容"
+        width="300"
+        align="left"
+        show-overflow
+      />
+      <vxe-column
+        field="matchType"
+        title="匹配类型"
+        width="150"
+        align="left"
+        show-overflow
+      >
+        <template v-slot="{ row }">
+          {{ getType(row) }}
+        </template>
       </vxe-column>
       <vxe-column field="mark" title="备注" min-width="150" show-overflow />
       <vxe-column title="操作" width="140" align="center" fixed="right">
         <template v-slot="{ row }">
-          <el-button type="primary" link size="small" @click="onEditClick(row)">编辑</el-button>
-          <el-button type="danger" link size="small" @click="onDeleteClick(row)">删除</el-button>
+          <el-button type="primary" link size="small" @click="onEditClick(row)"
+            >编辑</el-button
+          >
+          <el-button type="danger" link size="small" @click="onDeleteClick(row)"
+            >删除</el-button
+          >
         </template>
       </vxe-column>
     </vxe-table>
   </div>
   <div style="margin-top: 10px">
-    <el-pagination small background :current-page="pageNum" :page-size="pageSize" :page-sizes="[5, 10, 20]"
-      :total="total" layout="total, sizes, prev, pager, next" @size-change="onSizeChange"
-      @current-change="onCurrentChange" />
+    <el-pagination
+      small
+      background
+      :current-page="pageNum"
+      :page-size="pageSize"
+      :page-sizes="[5, 10, 20]"
+      :total="total"
+      layout="total, sizes, prev, pager, next"
+      @size-change="onSizeChange"
+      @current-change="onCurrentChange"
+    />
   </div>
 
-  <BsDialog :title="title" :width="500" v-model:visible="visible" @close="onClose" @save="onSave" @open="onOpen">
+  <BsDialog
+    :title="title"
+    :width="500"
+    v-model:visible="visible"
+    @close="onClose"
+    @save="onSave"
+  >
     <template #body>
-      <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
+      <el-form
+        label-width="auto"
+        :model="dataForm"
+        :rules="rules"
+        ref="dataFormRef"
+      >
         <el-form-item label="匹配模式" prop="matchType">
-          <el-select v-model="dataForm.matchType" placeholder="请输入匹配模式" clearable>
+          <el-select
+            v-model="dataForm.matchType"
+            placeholder="请输入匹配模式"
+            clearable
+          >
             <el-option label="URL路由" :value="1" />
             <el-option label="文件后缀" :value="2" />
             <el-option label="正则表达式" :value="3" />
           </el-select>
         </el-form-item>
         <el-form-item label="匹配内容" prop="matchContent">
-          <el-input v-model="dataForm.matchContent" placeholder="请输入匹配内容" clearable />
+          <el-input
+            v-model="dataForm.matchContent"
+            placeholder="请输入匹配内容"
+            clearable
+          />
         </el-form-item>
 
         <el-form-item label="备注">
-          <el-input v-model="dataForm.mark" placeholder="请输入备注" type="textarea" :row="2" clearable />
+          <el-input
+            v-model="dataForm.mark"
+            placeholder="请输入备注"
+            type="textarea"
+            :row="2"
+            clearable
+          />
         </el-form-item>
       </el-form>
     </template>
@@ -67,7 +130,11 @@ const {
   ruleTotal: total,
 } = storeToRefs(pageStore);
 
-import { apiGzipFilterCreate, apiGzipFilterModify, apiGzipFilterDelete } from "@/apis/page/gzip_filter";
+import {
+  apiGzipFilterCreate,
+  apiGzipFilterModify,
+  apiGzipFilterDelete,
+} from "@/apis/page/gzip_filter";
 
 import { ElMessage, ElMessageBox } from "element-plus";
 
@@ -114,15 +181,15 @@ onMounted(() => {
 const getType = (data) => {
   switch (data.matchType) {
     case 1:
-      return 'URL路由'
+      return "URL路由";
     case 2:
-      return '文件后缀'
+      return "文件后缀";
     case 3:
-      return '正则表达式'
+      return "正则表达式";
     default:
-      return ''
+      return "";
   }
-}
+};
 
 // 获取数据
 const getData = async () => {
@@ -215,9 +282,9 @@ const onSave = () => {
     if (valid) {
       switch (operationType.value) {
         case 0: {
-          console.log('indexPort.value', indexPort.value);
+          console.log("indexPort.value", indexPort.value);
           dataForm.portId = indexPort.value.id;
-          console.log('dataForm', dataForm);
+          console.log("dataForm", dataForm);
           const res = await apiGzipFilterCreate(dataForm);
           if (res.code !== 200) {
             ElMessage.error(res.message);
@@ -252,7 +319,7 @@ const onSave = () => {
 const onClose = () => {
   visible.value = false;
 
- if (!dataFormRef.value) return;
+  if (!dataFormRef.value) return;
   dataFormRef.value.resetFields();
 };
 

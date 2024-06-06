@@ -7,6 +7,7 @@
       :collapse="isCollapse"
       :default-active="defaultActive"
       :default-openeds="defaultOpeneds"
+      @select="onSelect"
     >
       <el-menu-item index="/dashboard" style="border-bottom: 1px solid #d9d9d9">
         <el-icon>
@@ -25,7 +26,9 @@
         </template>
 
         <el-menu-item index="/page/page_management">页面管理</el-menu-item>
-        <el-menu-item index="/page/target_management">服务地址管理</el-menu-item>
+        <el-menu-item index="/page/target_management"
+          >服务地址管理</el-menu-item
+        >
         <el-menu-item index="/page/resource_management">资源管理</el-menu-item>
       </el-sub-menu>
       <el-sub-menu index="/system">
@@ -61,13 +64,22 @@ import { useMenuStore } from "@/store/menu";
 import { storeToRefs } from "pinia";
 
 const menuStore = useMenuStore();
-const { isCollapse, collapseLeft, collapseRotate } = storeToRefs(menuStore);
+const { isCollapse, collapseLeft, collapseRotate, navBar } =
+  storeToRefs(menuStore);
 
 const defaultActive = ref("");
 const defaultOpeneds = ref([]);
 
 const collapseClick = () => {
   menuStore.changeCollapse();
+};
+
+const onSelect = (value) => {
+  console.log("index", value);
+  navBar.value.push({
+    index: value,
+    title: "",
+  });
 };
 </script>
 
