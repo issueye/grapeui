@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@imengyu/vue3-context-menu": "^1.4.1",
     "@vxecli/import-unplugin-vue-components": "^1.0.3",
     "axios": "^1.6.7",
     "codemirror": "^5",

@@ -75,11 +75,10 @@ const collapseClick = () => {
 };
 
 const onSelect = (value) => {
-  console.log("index", value);
-  navBar.value.push({
+  menuStore.setNavBar({
     index: value,
     title: "",
-  });
+  })
 };
 </script>
 

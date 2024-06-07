@@ -24,6 +24,9 @@ import BsUpload from '@/components/bs_upload/index.vue';
 import BsResources from '@/components/bs_resources/index.vue';
 import { InstallCodemirro } from "codemirror-editor-vue3"
 
+import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css'
+import ContextMenu from '@imengyu/vue3-context-menu'
+
 import router from './router/index';
 
 import App from './App.vue'
@@ -39,6 +42,7 @@ let app = createApp(App)
 app.use(router)
 app.use(pinia)
 app.use(ElementPlus)
+app.use(ContextMenu)
 app.use(InstallCodemirro)
 app.component('SvgIcon', svgIcon)
 app.component('BsHeader', BsHeader)
