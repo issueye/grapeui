@@ -1,14 +1,12 @@
 <template>
-  <div class="navbar-box">
-    <el-tabs v-model="indexTabbar" type="card" closable @tab-click="onTabClick" @tab-remove="onRemoveTabClick">
-      <el-tab-pane v-for="(item, index) in navBar" :key="index" :name="item.name">
-        <context-menu v-model:show="show" :options="optionsComponent">
-        </context-menu>
-        <el-context-menu slot="label" :data="rightMenuData" @item-click="contextMenuClick(item, $event)">
-          {{ item.title }}
-        </el-context-menu>
-      </el-tab-pane>
-    </el-tabs>
+  <div class="flex flex-row navbar-box">
+    <div
+      v-for="(item, index) in navBar"
+      :key="index"
+      class="flex items-center h-full w-28 pl-2 border border-slate-300 hover:border-indigo-300"
+    >
+      {{ item.title }}
+    </div>
   </div>
 </template>
 
@@ -20,24 +18,41 @@ const menuStore = useMenuStore();
 const { navBar, indexTabbar } = storeToRefs(menuStore);
 
 const rightMenuData = [
-  { label: '关闭当前', value: 'now' },
-  { label: '关闭其他', value: 'other' },
-  { label: '关闭全部', value: 'all' },
-]
+  { label: "关闭当前", value: "now" },
+  { label: "关闭其他", value: "other" },
+  { label: "关闭全部", value: "all" },
+];
 
-const onTabClick = () => {
+const onContextMenu = (e) => {
+  //prevent the browser's default menu
+  e.preventDefault();
+  //show our menu
+  this.$contextmenu({
+    x: e.x,
+    y: e.y,
+    items: [
+      {
+        label: "A menu item",
+        onClick: () => {
+          alert("You click a menu item");
+        },
+      },
+      {
+        label: "A submenu",
+        children: [{ label: "Item1" }, { label: "Item2" }, { label: "Item3" }],
+      },
+    ],
+  });
+};
 
-}
+const onTabClick = () => {};
 
 const onRemoveTabClick = (name) => {
-  console.log('tab:remove -> name', name);
-  menuStore.removeBar({ index: '', title: name })
-}
+  console.log("tab:remove -> name", name);
+  menuStore.removeBar({ index: "", title: name });
+};
 
-const contextMenuClick = (obj, e) => {
-
-}
-
+const contextMenuClick = (obj, e) => {};
 </script>
 
 <style lang="scss" scoped>
