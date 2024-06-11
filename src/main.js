@@ -24,6 +24,7 @@ import BsUpload from '@/components/bs_upload/index.vue';
 import BsResources from '@/components/bs_resources/index.vue';
 import { InstallCodemirro } from "codemirror-editor-vue3"
 import { iconifyInstall } from '@/iconify/index'
+import { directive } from 'vue3-menus';
 
 import router from './router/index';
 import App from './App.vue'
@@ -55,5 +56,7 @@ app.component('BsResources', BsResources)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
+
+app.directive('menus', directive); // 只注册指令
 
 app.mount('#app')
