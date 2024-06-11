@@ -10,7 +10,7 @@
         </el-aside>
         <el-main>
           <NavBar />
-          <div class="main-container">
+          <div class="m-[10px] h-5/6">
             <RouterView />
           </div>
         </el-main>
