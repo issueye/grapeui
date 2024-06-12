@@ -1,20 +1,29 @@
 <template>
   <div class="layout">
-    <el-container>
+    <el-container class="h-full">
       <el-header>
         <Header />
       </el-header>
-      <el-container>
-        <el-aside :width="menuWidth">
-          <Menu />
-        </el-aside>
-        <el-main>
+      <div class="flex flex-row h-full">
+        <Menu class="shadow-xl z-50" :style="{ width: menuWidth }" />
+        <div class="grow flex flex-col w-full bg-[#F0F2F5]">
           <NavBar />
-          <div class="m-[10px] h-5/6">
+          <div class="m-[10px] grow">
             <RouterView />
           </div>
-        </el-main>
-      </el-container>
+        </div>
+      </div>
+      <!-- <el-container>
+        <el-aside :width="menuWidth" class="shadow-xl z-50">
+          <Menu />
+        </el-aside>
+        <div class="flex flex-col w-full bg-[#F0F2F5]">
+          <NavBar />
+          <div class="m-[10px] grow">
+            <RouterView />
+          </div>
+        </div>
+      </el-container> -->
     </el-container>
   </div>
 </template>
@@ -37,26 +46,5 @@ console.log("menuWidth", menuWidth);
 .layout {
   height: 100%;
   width: 100%;
-
-  .el-container {
-    height: 100%;
-
-    .el-aside {
-      // box-shadow: 1px 0px 3px rgba(25, 41, 63, 0.1);
-      box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-      z-index: 999;
-    }
-
-    .el-main {
-      background-color: #f0f2f5;
-      padding: 0px;
-      height: 100%;
-
-      .main-container {
-        margin: 15px;
-        height: calc(100% - 70px);
-      }
-    }
-  }
 }
 </style>

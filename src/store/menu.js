@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 
 
-const collapse = '184.5px'
+const collapse = '164.5px'
 const expand = '60px' 
 const selfDash = {
     index: '/dashboard',
