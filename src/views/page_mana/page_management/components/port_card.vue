@@ -1,19 +1,13 @@
 <template>
   <el-card
     :style="{
-      border: indexPort.port == data.port ? '1px solid #398BFE' : 'none',
+      border:
+        indexPort.port == data.port ? '1px solid #398BFE' : '1px solid #d9d9d9',
     }"
     @click="onClick"
   >
-    <div
-      style="
-        display: inline-flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-      "
-    >
-      <div style="display: inline-flex; align-items: flex-start; padding: 5px">
+    <div class="flex items-center justify-between w-full">
+      <div class="flex items-start p-[5px]">
         <el-tooltip
           effect="dark"
           :content="data.mark"

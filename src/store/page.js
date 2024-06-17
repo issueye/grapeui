@@ -30,6 +30,8 @@ export const usePageStore = defineStore(
             createdAt: '',
         })
 
+        const indexPageId = ref('')
+
         const pageNum = ref(1)
         const pageSize = ref(10)
         // 查询表单
@@ -54,7 +56,7 @@ export const usePageStore = defineStore(
                 condition: form.condition,
                 pageNum: pageNum.value,
                 pageSize: pageSize.value,
-              };
+            };
 
             let res = await apiPortList(sendData)
             if (res.code == 200) {
@@ -147,6 +149,7 @@ export const usePageStore = defineStore(
             ruleTotal,
             gzipFilterTableData,
             gzipFilterTotal,
+            indexPageId,
 
             getData,
             getPageData,

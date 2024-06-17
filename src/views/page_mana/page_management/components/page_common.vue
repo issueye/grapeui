@@ -169,7 +169,7 @@
   </BsDialog>
 
   <BsDialog
-    title="页面上传"
+    :title="`端口[${indexPort.port}]上传页面`"
     :width="550"
     :visible="uploadVisible"
     @close="onUploadClose"
@@ -178,9 +178,7 @@
     @open="onUploadOpen"
   >
     <template #body>
-      <div
-        style="display: flex; justify-content: flex-end; align-items: flex-end"
-      >
+      <div class="flex justify-end items-end">
         <div style="width: 100%; margin-right: 20px">
           <div style="margin: 10px 0 10px 0">{{ uploadMessage }}</div>
           <el-progress
@@ -299,8 +297,8 @@ name = 'admin'
 version = '2.3.1.beta'
 # 产品编码
 productCode = '${nanoid()}'
-# 端口号
-port = ${indexPort.value.port}
+
+
 `
 );
 const tpVisible = ref(false);
@@ -386,6 +384,7 @@ const onUpload = async (fileObject) => {
   let fd = new FormData(); // 新建一个FormData()对象，这就相当于你新建了一个表单
   fd.append("file", fileObject.file);
   fd.append("type", "page");
+  fd.append("port", indexPort.value.port);
   fd.append("id", id);
 
   let { data } = await apiResourceUpload(fd);

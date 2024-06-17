@@ -1,36 +1,29 @@
 <template>
-  <el-card>
+  <el-card
+    @click="onCardClick"
+    :style="{
+      border:
+        data.id == indexPageId ? '1px solid #398BFE' : '1px solid #d9d9d9',
+    }"
+  >
     <template #header>
       <div class="card-header">
-        <div
-          style="
-            display: inline-flex;
-            justify-content: space-between;
-            width: 100%;
-          "
-        >
-          <span style="font-size: 14px">
+        <div class="flex justify-between w-full">
+          <span class="text-sm">
             {{ data.title ? data.title : "这是一条测试内容" }}
           </span>
           <el-icon @click="onDeleteClick" color="#d9d9d9"><Close /></el-icon>
         </div>
       </div>
     </template>
-    <div
-      style="
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        justify-content: space-between;
-      "
-    >
+    <div class="flex flex-col justify-between h-full">
       <el-image
         :src="data.thumbnail ? getPath(data.thumbnail) : defaultImg"
         fit="cover"
         style="padding: 5px 5px 0px 5px"
       />
-      <div class="body">
-        <div class="version">
+      <div class="flex flex-col justify-around px-2 py-1">
+        <div class="text-sm text-slate-300">
           版本：{{ data.version ? data.version : "无" }}
         </div>
       </div>
@@ -56,14 +49,14 @@
 
 <script setup>
 import { Edit, ChromeFilled } from "@element-plus/icons-vue";
-import { toRefs } from "vue";
+import { ref, toRefs } from "vue";
 import defaultImg from "@/assets/images/default.webp";
 import { usePageStore } from "@/store/page";
 import { storeToRefs } from "pinia";
 import { getImgPath } from "@/utils/utils";
 
 const pageStore = usePageStore();
-const { indexPort } = storeToRefs(pageStore);
+const { indexPort, indexPageId } = storeToRefs(pageStore);
 
 const props = defineProps({
   data: {
@@ -78,7 +71,6 @@ const props = defineProps({
 });
 
 const { data } = toRefs(props);
-console.log("data", data);
 
 const emits = defineEmits(["edit", "delete"]);
 
@@ -96,6 +88,10 @@ const onEditClick = () => {
 // 删除
 const onDeleteClick = () => {
   emits("delete", props.data);
+};
+
+const onCardClick = () => {
+  indexPageId.value = props.data.id;
 };
 
 const onJumpUrlClick = () => {
@@ -126,23 +122,6 @@ const onStateClick = () => {};
 
   ::v-deep(.el-card__header) {
     padding: 8px 4px;
-  }
-
-  .el-image {
-    height: 140px;
-    object-fit: none;
-  }
-
-  .body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 8px 4px;
-
-    .version {
-      font-size: 14px;
-      color: #bcbcbc;
-    }
   }
 
   .actions {
