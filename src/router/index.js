@@ -9,6 +9,8 @@ import Dashboard from '@/views/dashboard/index.vue';
 import TargetManagement from '@/views/page_mana/target_management/index.vue';
 import ResourceManagement from '@/views/page_mana/resource_management/index.vue';
 import PageManagement from '@/views/page_mana/page_management/index.vue';
+import HttpMessageQuery from '@/views/page_mana/http_messages/index.vue';
+
 import { createWebHashHistory } from 'vue-router';
 
 const routes = [
@@ -44,6 +46,11 @@ const routes = [
                         path: 'resource_management',
                         name: 'ResourceManagement',
                         component: ResourceManagement,
+                    },
+                    {
+                        path: 'http_message_query',
+                        name: 'HttpMessageQuery',
+                        component: HttpMessageQuery,
                     }
                 ],
             },
