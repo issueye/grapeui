@@ -4,12 +4,7 @@
     <template #body>
       <el-form inline>
         <el-form-item label="检索">
-          <el-input
-            v-model="form.condition"
-            placeholder="请输入检索内容"
-            clearable
-            @change="onChange"
-          />
+          <el-input v-model="form.condition" placeholder="请输入检索内容" clearable @change="onChange" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onQryClick">查询</el-button>
@@ -17,92 +12,62 @@
       </el-form>
 
       <div class="table-box">
-        <vxe-table
-          round
-          border
-          :data="tableData"
-          size="mini"
-          height="100%"
-          stripe
-          empty-text="没有数据"
-          auto-resize
-          :row-config="{ isCurrent: true, isHover: true }"
-        >
-          <vxe-column field="id" title="编码" width="150" show-overflow />
-          <vxe-column field="title" title="标题" width="150" show-overflow />
-          <vxe-column
-            field="fileName"
-            title="文件名称"
-            width="200"
-            show-overflow
-          />
-          <vxe-column field="ext" title="文件类型" width="200" show-overflow />
-          <vxe-column
-            field="createdAt"
-            title="创建时间"
-            width="200"
-            show-overflow
-          />
-          <vxe-column field="mark" title="备注" min-width="300" show-overflow />
-          <vxe-column title="操作" width="190" align="center" fixed="right">
+        <vxe-table round border :data="tableData" size="mini" height="100%" stripe empty-text="没有数据" auto-resize
+          :row-config="{ isCurrent: true, isHover: true }">
+          <vxe-column field="id" title="编码" width="300" show-overflow />
+          <vxe-column field="request" title="请求路径" min-width="200" show-overflow>
             <template v-slot="{ row }">
-              <el-button
-                type="primary"
-                link
-                size="small"
-                @click="onEditClick(row)"
-                >编辑</el-button
-              >
-              <el-button
-                type="danger"
-                text
-                size="small"
-                @click="onDeleteClick(row)"
-                >删除</el-button
-              >
+              <el-tag class="mr-2"> {{ row.request.method }} </el-tag> {{ row.request.path }}
+            </template>
+          </vxe-column>
+          <vxe-column field="request" title="请求时间" width="200" show-overflow>
+            <template v-slot="{ row }">
+              {{ formatDate(row.request.time) }}
+            </template>
+          </vxe-column>
+          <!-- 请求大小 -->
+            <vxe-column field="request" title="请求大小" width="100" show-overflow>
+            <template v-slot="{ row }">
+              <!-- 转换为 kb -->
+              {{ ((row.request.in_header_bytes + row.request.in_body_bytes) / 1024).toFixed(2) + ' kb'}}
+            </template>
+          </vxe-column>
+          
+          <!-- 返回状态 -->
+          <vxe-column field="response" title="返回状态" width="80" show-overflow>
+            <template v-slot="{ row }">
+              <el-tag> {{ row.response.status_code }} </el-tag>
+            </template>
+          </vxe-column>
+          <vxe-column field="response" title="返回大小" width="100" show-overflow>
+            <template v-slot="{ row }">
+              <!-- 转换为 kb -->
+              {{ ((row.response.out_header_bytes + row.response.out_body_bytes) / 1024).toFixed(2) + ' kb'}}
+            </template>
+          </vxe-column>
+          
+          <vxe-column title="操作" width="80" align="center" fixed="right">
+            <template v-slot="{ row }">
+              <el-button type="primary" link size="small" @click="onEditClick(row)">查看</el-button>
             </template>
           </vxe-column>
         </vxe-table>
       </div>
-      <div style="margin-top: 10px">
-        <el-pagination
-          small
-          background
-          :current-page="pageNum"
-          :page-size="pageSize"
-          :page-sizes="[5, 10, 20]"
-          :total="total"
-          layout="total, sizes, prev, pager, next"
-          @size-change="onSizeChange"
-          @current-change="onCurrentChange"
-        />
-      </div>
+      <!-- <div style="margin-top: 10px">
+        <el-pagination small background :current-page="pageNum" :page-size="pageSize" :page-sizes="[5, 10, 20]"
+          :total="total" layout="total, sizes, prev, pager, next" @size-change="onSizeChange"
+          @current-change="onCurrentChange" />
+      </div> -->
     </template>
   </BsMain>
 
-  <BsDialog
-    :title="title"
-    :width="600"
-    :visible="visible"
-    @close="onClose"
-    @save="onSave"
-    v-if="visible"
-  >
+  <BsDialog :title="title" :width="600" :visible="visible" @close="onClose" @save="onSave" v-if="visible">
     <template #body>
-      <el-form
-        label-width="auto"
-        :model="dataForm"
-        :rules="rules"
-        ref="dataFormRef"
-      >
+      <el-form label-width="auto" :model="dataForm" :rules="rules" ref="dataFormRef">
         <el-row :gutter="20">
           <el-col>
             <el-form-item label="标题" prop="title">
-              <el-input
-                v-model="dataForm.title"
-                placeholder="请输入标题"
-                clearable
-              />
+              <el-input v-model="dataForm.title" placeholder="请输入标题" clearable />
             </el-form-item>
           </el-col>
         </el-row>
@@ -110,41 +75,21 @@
         <el-row :gutter="20">
           <el-col :span="16">
             <el-form-item label="名称" prop="fileName">
-              <el-input
-                v-model="dataForm.fileName"
-                placeholder="请输入名称"
-                clearable
-                :disabled="true"
-              />
+              <el-input v-model="dataForm.fileName" placeholder="请输入名称" clearable :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="类型" prop="ext">
-              <el-input
-                v-model="dataForm.ext"
-                placeholder="请输入文件类型"
-                clearable
-                :disabled="true"
-              />
+              <el-input v-model="dataForm.ext" placeholder="请输入文件类型" clearable :disabled="true" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-form-item label="备注">
-          <el-input
-            v-model="dataForm.mark"
-            placeholder="请输入备注"
-            type="textarea"
-            :row="2"
-            clearable
-          />
+          <el-input v-model="dataForm.mark" placeholder="请输入备注" type="textarea" :row="2" clearable />
         </el-form-item>
         <el-form-item label="资源">
-          <BsUpload
-            :name="getFileName()"
-            @upload="onUpload"
-            @unUpload="unUpload"
-          />
+          <BsUpload :name="getFileName()" @upload="onUpload" @unUpload="unUpload" />
         </el-form-item>
       </el-form>
     </template>
@@ -154,13 +99,9 @@
 <script setup>
 import { onMounted, reactive, ref } from "vue";
 
-import {
-  apiResourceList,
-  apiResourceCreate,
-  apiResourceModify,
-  apiResourceDelete,
-} from "@/apis/page/resource";
+import { apiGetHttpMessages } from '@/apis/page/query';
 import { ElMessage, ElMessageBox } from "element-plus";
+import dayjs from 'dayjs';
 
 const nameTitle = "资源信息";
 // 标题
@@ -205,14 +146,16 @@ const form = reactive({
   condition: "",
 });
 
+// 使用dayjs 返回格式化的时间
+const formatDate = (date) => {
+  return dayjs(date).format("YYYY-MM-DD HH:mm:ss.SSS");
+};
+
 // 弹窗表单
 const dataForm = reactive({
   id: "",
-  title: "",
-  fileName: "",
-  path: "",
-  ext: "",
-  mark: "",
+  request: "",
+  response: "",
 });
 
 //  表格数据
@@ -247,10 +190,10 @@ const getData = async () => {
     pageSize: pageSize.value,
   };
 
-  let res = await apiResourceList(sendData);
+  let res = await apiGetHttpMessages(sendData);
   if (res.code === 200) {
     tableData.value = res.data;
-    total.value = res.pageInfo.total;
+    // total.value = res.pageInfo.total;
   }
 };
 

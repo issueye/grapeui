@@ -93,6 +93,11 @@ const menus = [
         title: "资源管理",
         icon: "carbon:software-resource-cluster",
       },
+      {
+        index: "/page/http_message_query",
+        title: "转发记录查询",
+        icon: "carbon:software-resource-cluster",
+      }
     ],
   },
   {
